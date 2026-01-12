@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.28) # 3.15
 project(AdaptixClient LANGUAGES C CXX)
 
+if(WIN32)
+    add_compile_definitions(NOMINMAX)
+endif()
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 23)
