@@ -83,14 +83,14 @@ jobs:
   # --- macOS Client Build Job ---
   build-client-macos:
     name: Build Client (macOS ${{ matrix.arch }})
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-14
     strategy:
       matrix:
         include:
-          - os: macos-13
-            arch: x64
-          - os: macos-14
-            arch: arm64
+          - arch: x64
+            osx_arch: "x86_64"
+          - arch: arm64
+            osx_arch: "arm64"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -108,7 +108,8 @@ jobs:
       - name: Configure CMake
         run: |
           cmake -B build -S AdaptixClient -G Ninja -DCMAKE_BUILD_TYPE=Release \
-            -DOPENSSL_ROOT_DIR=$(brew --prefix openssl)
+            -DOPENSSL_ROOT_DIR=$(brew --prefix openssl) \
+            -DCMAKE_OSX_ARCHITECTURES=${{ matrix.osx_arch }}
         
       - name: Build
         run: cmake --build build
