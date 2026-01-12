@@ -67,15 +67,16 @@ jobs:
     - name: Install Qt6 and dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-declarative-dev \
-          qt6-websockets-dev libqt6sql6 cmake build-essential libssl-dev zlib1g-dev \
-          libgl1-mesa-dev libglu1-mesa-dev
+        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-qml-dev \
+          qt6-websockets-dev cmake build-essential libssl-dev zlib1g-dev \
+          libgl1-mesa-dev libglu1-mesa-dev libqt6opengl6-dev || \
+        sudo apt-get install -y qt6-base-dev cmake build-essential libssl-dev zlib1g-dev libgl1-mesa-dev
 
     - name: Build Client
       run: |
         cd AdaptixClient
-        cmake . -DCMAKE_BUILD_TYPE=Release
-        make -j$(nproc)
+        cmake . -DCMAKE_BUILD_TYPE=Release || { echo "CMake failed, checking errors..."; cat CMakeFiles/CMakeError.log 2>/dev/null || true; exit 1; }
+        make -j$(nproc) || { echo "Make failed"; exit 1; }
 
     - name: Upload Client Artifact
       uses: actions/upload-artifact@v4
@@ -98,8 +99,8 @@ jobs:
       run: |
         cd AdaptixClient
         export CMAKE_PREFIX_PATH=$(brew --prefix qt@6)
-        cmake . -DCMAKE_BUILD_TYPE=Release
-        make -j$(sysctl -n hw.ncpu)
+        cmake . -DCMAKE_BUILD_TYPE=Release || { echo "CMake failed"; exit 1; }
+        make -j$(sysctl -n hw.ncpu) || { echo "Make failed"; exit 1; }
 
     - name: Upload Client Artifact
       uses: actions/upload-artifact@v4
@@ -121,10 +122,11 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        modules: 'qtwebsockets'
+        modules: 'qtwebsockets qtnetworkauth'
+        cache: true
 
     - name: Setup MSVC
-      uses: microsoft/setup-msbuild@v1.1
+      uses: ilammy/msvc-dev-cmd@v1
 
     - name: Build Client
       run: |
