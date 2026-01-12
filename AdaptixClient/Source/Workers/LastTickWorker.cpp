@@ -43,8 +43,8 @@ void LastTickWorker::updateLastItems()
                 else if ( endH == nowH && startM <= nowM && nowM < endM ){}
                 else {
                     isOffHours = true;
-                    if (agent->data.Mark != "No worktime")
-                        agent->MarkItem("No worktime");
+                    if (agent->data.Mark != "非工作时间")
+                        agent->MarkItem("非工作时间");
                 }
             }
 
@@ -56,8 +56,8 @@ void LastTickWorker::updateLastItems()
                     else
                         agent->LastMark = FormatSecToStr(diff) + " / " + FormatSecToStr(agent->data.Sleep);
 
-                    if (agent->data.Mark != "No response")
-                        agent->MarkItem("No response");
+                    if (agent->data.Mark != "无响应")
+                        agent->MarkItem("无响应");
 
                     continue;
                 }

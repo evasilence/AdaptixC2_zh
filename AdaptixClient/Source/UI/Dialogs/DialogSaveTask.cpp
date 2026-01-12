@@ -13,26 +13,26 @@ DialogSaveTask::~DialogSaveTask() = default;
 void DialogSaveTask::createUI()
 {
     this->resize(900, 500);
-    this->setWindowTitle( "Save Task" );
+    this->setWindowTitle( "保存任务" );
     this->setProperty("Main", "base");
 
-    commandLineLabel = new QLabel("CommandLine:", this);
+    commandLineLabel = new QLabel("命令行：", this);
     commandLineInput = new QLineEdit(this);
 
-    messageLabel = new QLabel("Message:", this);
+    messageLabel = new QLabel("消息：", this);
     messageCombo = new QComboBox(this);
-    messageCombo->addItems(QStringList() << "Success" << "Error" );
+    messageCombo->addItems(QStringList() << "成功" << "错误" );
     messageInput = new QLineEdit(this);
 
-    textLabel = new QLabel("Output:", this);
+    textLabel = new QLabel("输出：", this);
     textEdit  = new QTextEdit(this);
 
     spacer_1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Maximum);
     spacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Maximum);
 
-    createButton = new QPushButton("Save", this);
+    createButton = new QPushButton("保存", this);
     createButton->setProperty("ButtonStyle", "dialog");
-    cancelButton = new QPushButton("Cancel", this);
+    cancelButton = new QPushButton("取消", this);
     cancelButton->setProperty("ButtonStyle", "dialog");
 
     hLayoutBottom = new QHBoxLayout();
@@ -67,7 +67,7 @@ void DialogSaveTask::StartDialog(const QString &text)
     QString restLines = text.section('\n', 1);
 
     commandLineInput->setText(firstLine);
-    messageInput->setText("Remote Terminal output");
+    messageInput->setText("远程终端输出");
     textEdit->setText(restLines);
 
     this->valid = false;
@@ -90,7 +90,7 @@ void DialogSaveTask::onButtonSave()
     }
 
     int type = 7;
-    if (messageCombo->currentText() == "Error")
+    if (messageCombo->currentText() == "错误")
         type = 6;
 
     data = {};

@@ -86,7 +86,7 @@ void SessionsTableWidget::createUI()
     comboAgentType->setMinimumWidth(150);
     comboAgentType->addItem("All types");
 
-    checkOnlyActive = new QCheckBox("only active", searchWidget);
+    checkOnlyActive = new QCheckBox("仅活跃", searchWidget);
 
     hideButton = new ClickableLabel("  x  ");
     hideButton->setCursor(Qt::PointingHandCursor);
@@ -311,7 +311,7 @@ void SessionsTableWidget::onFilterChanged() const
 
     QSet<QString> selectedTypes;
     QString currentType = comboAgentType->currentText();
-    if (currentType != "All types" && !currentType.isEmpty()) {
+    if (currentType != "所有类型" && !currentType.isEmpty()) {
         selectedTypes.insert(currentType);
     }
     proxyModel->setAgentTypes(selectedTypes);
@@ -335,44 +335,44 @@ void SessionsTableWidget::handleSessionsTableMenu(const QPoint &pos)
             agentIds.append(agentId);
         }
 
-        auto agentMenu = ctxMenu.addMenu("Agent");
-        agentMenu->addAction("Execute command", this, &SessionsTableWidget::actionExecuteCommand);
-        agentMenu->addAction("Task manager", this, &SessionsTableWidget::actionTasksBrowserOpen);
+        auto agentMenu = ctxMenu.addMenu("代理");
+        agentMenu->addAction("执行命令", this, &SessionsTableWidget::actionExecuteCommand);
+        agentMenu->addAction("任务管理器", this, &SessionsTableWidget::actionTasksBrowserOpen);
         agentMenu->addSeparator();
 
         int agentCount = adaptixWidget->ScriptManager->AddMenuSession(agentMenu, "SessionAgent", agentIds);
         if (agentCount > 0)
             agentMenu->addSeparator();
 
-        agentMenu->addAction("Remove console data", this, &SessionsTableWidget::actionConsoleDelete);
-        agentMenu->addAction("Remove from server", this, &SessionsTableWidget::actionAgentRemove);
+        agentMenu->addAction("清除控制台数据", this, &SessionsTableWidget::actionConsoleDelete);
+        agentMenu->addAction("从服务器移除", this, &SessionsTableWidget::actionAgentRemove);
 
-        auto sessionMenu = ctxMenu.addMenu("Session");
-        sessionMenu->addAction("Mark as Active",   this, &SessionsTableWidget::actionMarkActive);
-        sessionMenu->addAction("Mark as Inactive", this, &SessionsTableWidget::actionMarkInactive);
+        auto sessionMenu = ctxMenu.addMenu("会话");
+        sessionMenu->addAction("标记为活跃",   this, &SessionsTableWidget::actionMarkActive);
+        sessionMenu->addAction("标记为非活跃", this, &SessionsTableWidget::actionMarkInactive);
         sessionMenu->addSeparator();
         if ( agentIds.size() == 1 )
-            sessionMenu->addAction("Set data", this, &SessionsTableWidget::actionSetData);
-        sessionMenu->addAction("Set tag", this, &SessionsTableWidget::actionItemTag);
+            sessionMenu->addAction("设置数据", this, &SessionsTableWidget::actionSetData);
+        sessionMenu->addAction("设置标签", this, &SessionsTableWidget::actionItemTag);
         sessionMenu->addSeparator();
-        sessionMenu->addAction("Set items color", this, &SessionsTableWidget::actionItemColor);
-        sessionMenu->addAction("Set text color",  this, &SessionsTableWidget::actionTextColor);
-        sessionMenu->addAction("Reset color",     this, &SessionsTableWidget::actionColorReset);
+        sessionMenu->addAction("设置项颜色", this, &SessionsTableWidget::actionItemColor);
+        sessionMenu->addAction("设置文本颜色",  this, &SessionsTableWidget::actionTextColor);
+        sessionMenu->addAction("重置颜色",     this, &SessionsTableWidget::actionColorReset);
         sessionMenu->addSeparator();
-        sessionMenu->addAction("Hide on client", this, &SessionsTableWidget::actionItemHide);
+        sessionMenu->addAction("在客户端隐藏", this, &SessionsTableWidget::actionItemHide);
 
-        ctxMenu.addAction("Console", this, &SessionsTableWidget::actionConsoleOpen);
+        ctxMenu.addAction("控制台", this, &SessionsTableWidget::actionConsoleOpen);
         ctxMenu.addSeparator();
         ctxMenu.addMenu(agentMenu);
 
-        auto browserMenu = ctxMenu.addMenu("Browsers");
+        auto browserMenu = ctxMenu.addMenu("浏览器");
         int browserCount = adaptixWidget->ScriptManager->AddMenuSession(browserMenu, "SessionBrowser", agentIds);
         if (browserCount > 0)
             ctxMenu.addMenu(browserMenu);
         else
             ctxMenu.removeAction(browserMenu->menuAction());
 
-        auto accessMenu = ctxMenu.addMenu("Access");
+        auto accessMenu = ctxMenu.addMenu("访问");
         int accessCount = adaptixWidget->ScriptManager->AddMenuSession(accessMenu, "SessionAccess", agentIds);
         if (accessCount > 0)
             ctxMenu.addMenu(accessMenu);
@@ -417,7 +417,7 @@ void SessionsTableWidget::actionExecuteCommand()
         return;
 
     bool ok = false;
-    QString cmd = QInputDialog::getText(this,"Execute Command", "Command", QLineEdit::Normal, "", &ok);
+    QString cmd = QInputDialog::getText(this,"执行命令", "命令", QLineEdit::Normal, "", &ok);
     if (!ok)
         return;
 
@@ -455,7 +455,7 @@ void SessionsTableWidget::actionMarkActive() const
 
     HttpReqAgentSetMarkAsync(listId, "", *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
@@ -476,7 +476,7 @@ void SessionsTableWidget::actionMarkInactive() const
 
     HttpReqAgentSetMarkAsync(listId, "Inactive", *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
@@ -495,12 +495,12 @@ void SessionsTableWidget::actionItemColor() const
     if(listId.empty())
         return;
 
-    QColor itemColor = QColorDialog::getColor(Qt::white, nullptr, "Select items color");
+    QColor itemColor = QColorDialog::getColor(Qt::white, nullptr, "选择项颜色");
     if (itemColor.isValid()) {
         QString itemColorHex = itemColor.name();
         HttpReqAgentSetColorAsync(listId, itemColorHex, "", false, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }
@@ -520,12 +520,12 @@ void SessionsTableWidget::actionTextColor() const
     if(listId.empty())
         return;
 
-    QColor textColor = QColorDialog::getColor(Qt::white, nullptr, "Select text color");
+    QColor textColor = QColorDialog::getColor(Qt::white, nullptr, "选择文本颜色");
     if (textColor.isValid()) {
         QString textColorHex = textColor.name();
         HttpReqAgentSetColorAsync(listId, "", textColorHex, false, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }
@@ -547,13 +547,13 @@ void SessionsTableWidget::actionColorReset() const
 
     HttpReqAgentSetColorAsync(listId, "", "", true, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
 void SessionsTableWidget::actionConsoleDelete()
 {
-    QMessageBox::StandardButton reply = QMessageBox::question(this, "Clear Confirmation",
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "清除确认",
                                       "Are you sure you want to delete all agent console data and history from server (tasks will not be deleted from TaskManager)?\n\n"
                                       "If you want to temporarily hide the contents of the agent console, do so through the agent console menu.",
                                       QMessageBox::Yes | QMessageBox::No,
@@ -580,13 +580,13 @@ void SessionsTableWidget::actionConsoleDelete()
 
     HttpReqConsoleRemoveAsync(listId, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
 void SessionsTableWidget::actionAgentRemove()
 {
-    QMessageBox::StandardButton reply = QMessageBox::question(this, "Delete Confirmation",
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "删除确认",
                                       "Are you sure you want to delete all information about the selected agents from the server?\n\n"
                                       "If you want to hide the record, simply choose: 'Item -> Hide on Client'.",
                                       QMessageBox::Yes | QMessageBox::No,
@@ -610,7 +610,7 @@ void SessionsTableWidget::actionAgentRemove()
 
     HttpReqAgentRemoveAsync(listId, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
@@ -635,11 +635,11 @@ void SessionsTableWidget::actionItemTag() const
         return;
 
     bool inputOk;
-    QString newTag = QInputDialog::getText(nullptr, "Set tags", "New tag", QLineEdit::Normal,tag, &inputOk);
+    QString newTag = QInputDialog::getText(nullptr, "设置标签", "新标签", QLineEdit::Normal,tag, &inputOk);
     if ( inputOk ) {
         HttpReqAgentSetTagAsync(listId, newTag, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }

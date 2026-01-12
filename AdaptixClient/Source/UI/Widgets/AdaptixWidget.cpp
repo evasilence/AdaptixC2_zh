@@ -126,7 +126,7 @@ AdaptixWidget::AdaptixWidget(AuthProfile* authProfile, QThread* channelThread, W
 
     connect( ChannelWsWorker, &WebSocketWorker::websocket_closed, this, [this]() {
         if (this->sync && dialogSyncPacket) {
-            dialogSyncPacket->error("Connection lost during synchronization");
+            dialogSyncPacket->error("同步过程中连接丢失");
             this->sync = false;
             this->setSyncUpdateUI(true);
         }
@@ -159,12 +159,12 @@ void AdaptixWidget::createUI()
     listenersButton = new QPushButton( QIcon(":/icons/listeners"), "", this );
     listenersButton->setIconSize( QSize( 24,24 ));
     listenersButton->setFixedSize(37, 28);
-    listenersButton->setToolTip("Listeners & Sites");
+    listenersButton->setToolTip("监听器和站点");
 
     logsButton = new QPushButton(QIcon(":/icons/logs"), "", this );
     logsButton->setIconSize( QSize( 24,24 ));
     logsButton->setFixedSize(37, 28);
-    logsButton->setToolTip("Logs");
+    logsButton->setToolTip("日志");
 
     line_1 = new QFrame(this);
     line_1->setFrameShape(QFrame::VLine);
@@ -173,17 +173,17 @@ void AdaptixWidget::createUI()
     chatButton = new QPushButton(QIcon(":/icons/chat"), "", this );
     chatButton->setIconSize( QSize( 24,24 ));
     chatButton->setFixedSize(37, 28);
-    chatButton->setToolTip("Chat");
+    chatButton->setToolTip("聊天");
 
     sessionsButton = new QPushButton( QIcon(":/icons/format_list"), "", this );
     sessionsButton->setIconSize( QSize( 24,24 ));
     sessionsButton->setFixedSize(37, 28);
-    sessionsButton->setToolTip("Session table");
+    sessionsButton->setToolTip("会话表");
 
     graphButton = new QPushButton( QIcon(":/icons/graph"), "", this );
     graphButton->setIconSize( QSize( 24,24 ));
     graphButton->setFixedSize(37, 28);
-    graphButton->setToolTip("Session graph");
+    graphButton->setToolTip("会话图");
 
     line_2 = new QFrame(this);
     line_2->setFrameShape(QFrame::VLine);
@@ -192,12 +192,12 @@ void AdaptixWidget::createUI()
     tasksButton = new QPushButton(QIcon(":/icons/job"), "", this );
     tasksButton->setIconSize(QSize(24, 24 ));
     tasksButton->setFixedSize(37, 28);
-    tasksButton->setToolTip("Jobs & Tasks");
+    tasksButton->setToolTip("作业和任务");
 
     tunnelButton = new QPushButton( QIcon(":/icons/vpn"), "", this );
     tunnelButton->setIconSize( QSize( 24,24 ));
     tunnelButton->setFixedSize(37, 28);
-    tunnelButton->setToolTip("Tunnels table");
+    tunnelButton->setToolTip("通道表");
 
     line_3 = new QFrame(this);
     line_3->setFrameShape(QFrame::VLine);
@@ -206,27 +206,27 @@ void AdaptixWidget::createUI()
     downloadsButton = new QPushButton( QIcon(":/icons/downloads"), "", this );
     downloadsButton->setIconSize( QSize( 24,24 ));
     downloadsButton->setFixedSize(37, 28);
-    downloadsButton->setToolTip("Downloads");
+    downloadsButton->setToolTip("下载");
 
     targetsButton = new QPushButton( QIcon(":/icons/devices"), "", this );
     targetsButton->setIconSize( QSize( 24,24 ));
     targetsButton->setFixedSize(37, 28);
-    targetsButton->setToolTip("Targets table");
+    targetsButton->setToolTip("目标表");
 
     credsButton = new QPushButton( QIcon(":/icons/key"), "", this );
     credsButton->setIconSize( QSize( 24,24 ));
     credsButton->setFixedSize(37, 28);
-    credsButton->setToolTip("Credentials");
+    credsButton->setToolTip("凭证");
 
     screensButton = new QPushButton( QIcon(":/icons/picture"), "", this );
     screensButton->setIconSize( QSize( 24,24 ));
     screensButton->setFixedSize(37, 28);
-    screensButton->setToolTip("Screens");
+    screensButton->setToolTip("屏幕截图");
 
     keysButton = new QPushButton( QIcon(":/icons/keyboard"), "", this );
     keysButton->setIconSize( QSize( 24,24 ));
     keysButton->setFixedSize(37, 28);
-    keysButton->setToolTip("Keystrokes");
+    keysButton->setToolTip("键盘记录");
 
     line_4 = new QFrame(this);
     line_4->setFrameShape(QFrame::VLine);
@@ -235,7 +235,7 @@ void AdaptixWidget::createUI()
     reconnectButton = new QPushButton(QIcon(":/icons/link"), "");
     reconnectButton->setIconSize( QSize( 24,24 ));
     reconnectButton->setFixedSize(37, 28);
-    reconnectButton->setToolTip("Reconnect to C2");
+    reconnectButton->setToolTip("重连到 C2");
     QIcon onReconnectButton = RecolorIcon(reconnectButton->icon(), COLOR_NeonGreen);
     reconnectButton->setIcon(onReconnectButton);
 
@@ -813,7 +813,7 @@ void AdaptixWidget::ShowTunnelCreator(const QString &AgentId, const bool socks4,
                     QString tunnelId = message;
                     tunnelEndpoint->SetTunnelId(tunnelId);
                     this->ClientTunnels[tunnelId] = tunnelEndpoint;
-                    MessageSuccess("Tunnel " + tunnelId + " started");
+                    MessageSuccess("通道 " + tunnelId + " 已启动");
                 }
                 delete dialogTunnel;
             });
@@ -917,7 +917,7 @@ void AdaptixWidget::OnReconnect()
 
             QMetaObject::invokeMethod(this, [=, this]() {
                 if (!result) {
-                    MessageError("Login failure");
+                    MessageError("登录失败");
                 }
 
                 workerThread->quit();
@@ -940,7 +940,7 @@ void AdaptixWidget::OnReconnect()
 
             QMetaObject::invokeMethod(this, [=, this]() {
                 if (!result) {
-                    MessageError("Login failure");
+                    MessageError("登录失败");
                     if (dialogSyncPacket && dialogSyncPacket->splashScreen)
                         dialogSyncPacket->splashScreen->close();
                 } else {

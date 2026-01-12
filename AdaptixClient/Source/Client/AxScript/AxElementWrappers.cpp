@@ -1066,7 +1066,7 @@ AxSelectorCreds::AxSelectorCreds(const QJSValue &headers, AxScriptEngine* jsEngi
     auto vecCreds = scriptEngine->manager()->GetCredentials();
 
     dialog = new AxDialogCreds(headers, vecCreds);
-    dialog->setWindowTitle("Choose credentials");
+    dialog->setWindowTitle("选择凭证");
 }
 
 void AxSelectorCreds::setSize(const int w, const int h ) const { dialog->resize(w, h); }
@@ -1169,7 +1169,7 @@ AxDialogAgents::AxDialogAgents(const QJSValue &headers, QVector<AgentData> vecAg
             fieldKeys.append(val);
         }
     }
-    headerLabels.append("Agent ID");
+    headerLabels.append("代理ID");
     fieldKeys.append("id");
 
     tableModel->setHeaders(headerLabels, fieldKeys);
@@ -1220,7 +1220,7 @@ AxSelectorAgents::AxSelectorAgents(const QJSValue &headers, AxScriptEngine* jsEn
         vecAgents.append(agent->data);
 
     dialog = new AxDialogAgents(headers, vecAgents);
-    dialog->setWindowTitle("Choose agent");
+    dialog->setWindowTitle("选择代理");
 }
 
 void AxSelectorAgents::setSize(const int w, const int h ) const { dialog->resize(w, h); }

@@ -56,7 +56,7 @@ void ListenersWidget::createUI()
 
     autoSearchCheck = new QCheckBox("auto", searchWidget);
     autoSearchCheck->setChecked(true);
-    autoSearchCheck->setToolTip("Auto search on text change. If unchecked, press Enter to search.");
+    autoSearchCheck->setToolTip("文本改变时自动搜索。如未勾选，按 Enter 键搜索。");
 
     hideButton = new ClickableLabel("  x  ");
     hideButton->setCursor(Qt::PointingHandCursor);
@@ -176,11 +176,11 @@ void ListenersWidget::handleListenersMenu(const QPoint &pos) const
 {
     QMenu listenerMenu = QMenu();
 
-    listenerMenu.addAction("Create", this, &ListenersWidget::onCreateListener);
-    listenerMenu.addAction("Edit",   this, &ListenersWidget::onEditListener);
-    listenerMenu.addAction("Remove", this, &ListenersWidget::onRemoveListener);
+    listenerMenu.addAction("新建", this, &ListenersWidget::onCreateListener);
+    listenerMenu.addAction("编辑",   this, &ListenersWidget::onEditListener);
+    listenerMenu.addAction("移除", this, &ListenersWidget::onRemoveListener);
     listenerMenu.addSeparator();
-    listenerMenu.addAction("Generate agent", this, &ListenersWidget::onGenerateAgent);
+    listenerMenu.addAction("生成代理", this, &ListenersWidget::onGenerateAgent);
 
     QPoint globalPos = tableView->mapToGlobal(pos);
     listenerMenu.exec(globalPos);
@@ -377,8 +377,8 @@ void ListenersWidget::onRemoveListener() const
     auto listenerName    = listenersModel->data(listenersModel->index(sourceIndex.row(), LC_Name), Qt::DisplayRole).toString();
     auto listenerRegName = listenersModel->data(listenersModel->index(sourceIndex.row(), LC_RegName), Qt::DisplayRole).toString();
 
-    QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Delete Confirmation",
-                                      QString("Are you sure you want to remove the '%1' listener?").arg(listenerName),
+    QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "删除确认",
+                                      QString("您确定要移除监听器 '%1' 吗？").arg(listenerName),
                                       QMessageBox::Yes | QMessageBox::No,
                                       QMessageBox::No);
     if (reply != QMessageBox::Yes)
@@ -386,7 +386,7 @@ void ListenersWidget::onRemoveListener() const
 
     HttpReqListenerStopAsync(listenerName, listenerRegName, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 

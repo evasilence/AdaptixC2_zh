@@ -95,7 +95,7 @@ void AxConsoleWidget::createUI()
     InputLineEdit->setProperty( "LineEditStyle", "console" );
     InputLineEdit->setFont( FontManager::instance().getFont("Hack") );
 
-    ResetButton = new QPushButton("Reset AxScript");
+    ResetButton = new QPushButton("重置 AxScript");
 
     MainGridLayout = new QGridLayout(this );
     MainGridLayout->setVerticalSpacing(4 );
@@ -260,7 +260,7 @@ void AxConsoleWidget::handleShowHistory()
         return;
 
     QDialog *historyDialog = new QDialog(this);
-    historyDialog->setWindowTitle(tr("Command History"));
+    historyDialog->setWindowTitle(tr("命令历史"));
     historyDialog->setAttribute(Qt::WA_DeleteOnClose);
 
 
@@ -270,7 +270,7 @@ void AxConsoleWidget::handleShowHistory()
     historyList->setAlternatingRowColors(true);
     historyList->setItemDelegate(new QStyledItemDelegate(historyList));
 
-    QPushButton *closeButton = new QPushButton(tr("Close"), historyDialog);
+    QPushButton *closeButton = new QPushButton(tr("关闭"), historyDialog);
 
     QVBoxLayout *layout = new QVBoxLayout(historyDialog);
     layout->addWidget(historyList);
@@ -288,7 +288,7 @@ void AxConsoleWidget::handleShowHistory()
     }
 
     if (history.isEmpty()) {
-        QListWidgetItem *item = new QListWidgetItem(tr("No command history available"));
+        QListWidgetItem *item = new QListWidgetItem(tr("无命令历史"));
         item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
         historyList->addItem(item);
     }

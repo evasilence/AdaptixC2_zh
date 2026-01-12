@@ -29,7 +29,7 @@ void BrowserProcessWidget::createUI()
     buttonReload = new QPushButton(QIcon(":/icons/reload"), "", this);
     buttonReload->setIconSize( QSize( 24,24 ));
     buttonReload->setFixedSize(37, 28);
-    buttonReload->setToolTip("Reload");
+    buttonReload->setToolTip("重载");
 
     inputFilter = new QLineEdit(this);
 
@@ -38,7 +38,7 @@ void BrowserProcessWidget::createUI()
     line_1->setMinimumHeight(25);
 
     statusLabel = new QLabel(this);
-    statusLabel->setText("Status: ");
+    statusLabel->setText("状态：");
 
     tableWidget = new QTableWidget(this );
     tableWidget->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -89,7 +89,7 @@ void BrowserProcessWidget::createUI()
 
     treeBrowserWidget = new QTreeWidget();
     treeBrowserWidget->setSortingEnabled(false);
-    treeBrowserWidget->headerItem()->setText( 0, "Process Tree" );
+    treeBrowserWidget->headerItem()->setText( 0, "进程树" );
     treeBrowserWidget->setIconSize(QSize(25, 25));
 
     splitter = new QSplitter( this );
@@ -476,7 +476,7 @@ void BrowserProcessWidget::handleTableMenu(const QPoint &pos)
     if (count) {
         ctxMenu.addSeparator();
     }
-    ctxMenu.addAction( "Copy PID", this, &BrowserProcessWidget::actionCopyPid);
+    ctxMenu.addAction( "复制 PID", this, &BrowserProcessWidget::actionCopyPid);
 
     ctxMenu.exec(tableWidget->horizontalHeader()->viewport()->mapToGlobal(pos));
 }

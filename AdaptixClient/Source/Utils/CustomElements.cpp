@@ -224,7 +224,7 @@ void TextEditConsole::createContextMenu(const QPoint &pos) {
             setBufferSize(newSize);
     });
     
-    QAction *noWrapAction = menu->addAction("No Wrap");
+    QAction *noWrapAction = menu->addAction("不换行");
     noWrapAction->setCheckable(true);
     noWrapAction->setChecked(noWrap);
     connect(noWrapAction, &QAction::toggled, this, [this](bool checked) {
@@ -237,7 +237,7 @@ void TextEditConsole::createContextMenu(const QPoint &pos) {
         }
     });
     
-    QAction *autoScrollAction = menu->addAction("Auto scroll");
+    QAction *autoScrollAction = menu->addAction("自动滚动");
     autoScrollAction->setCheckable(true);
     autoScrollAction->setChecked(autoScroll);
     connect(autoScrollAction, &QAction::toggled, this, &TextEditConsole::setAutoScrollEnabled);

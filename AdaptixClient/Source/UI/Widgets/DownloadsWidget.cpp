@@ -58,11 +58,11 @@ void DownloadsWidget::createUI()
 
     autoSearchCheck = new QCheckBox("auto", searchWidget);
     autoSearchCheck->setChecked(true);
-    autoSearchCheck->setToolTip("Auto search on text change. If unchecked, press Enter to search.");
+    autoSearchCheck->setToolTip("文本改变时自动搜索。如果不选中，按 Enter 键搜索。");
 
     stateComboBox = new QComboBox(searchWidget);
     stateComboBox->setMinimumWidth(100);
-    stateComboBox->addItems(QStringList() << "Any state" << "Running" << "Stopped" << "Finished");
+    stateComboBox->addItems(QStringList() << "任意状态" << "运行中" << "已停止" << "已完成");
 
     hideButton = new ClickableLabel("  x  ");
     hideButton->setCursor(Qt::PointingHandCursor);
@@ -237,11 +237,11 @@ void DownloadsWidget::handleDownloadsMenu(const QPoint &pos)
     auto ctxMenu = QMenu();
 
     if (download->State == DOWNLOAD_STATE_FINISHED) {
-        ctxMenu.addAction("Sync file to client", this, &DownloadsWidget::actionSync);
+        ctxMenu.addAction("同步文件到客户端", this, &DownloadsWidget::actionSync);
 
-        auto syncMenu = new QMenu("Sync as ...", &ctxMenu);
-        syncMenu->addAction("Curl command", this, &DownloadsWidget::actionSyncCurl);
-        syncMenu->addAction("Wget command", this, &DownloadsWidget::actionSyncWget);
+        auto syncMenu = new QMenu("同步为…", &ctxMenu);
+        syncMenu->addAction("Curl 命令", this, &DownloadsWidget::actionSyncCurl);
+        syncMenu->addAction("Wget 命令", this, &DownloadsWidget::actionSyncWget);
         ctxMenu.addMenu(syncMenu);
         ctxMenu.addSeparator();
 
@@ -251,7 +251,7 @@ void DownloadsWidget::handleDownloadsMenu(const QPoint &pos)
         if (menuCount > 0)
             ctxMenu.addSeparator();
 
-        ctxMenu.addAction("Delete file", this, &DownloadsWidget::actionDelete);
+        ctxMenu.addAction("删除文件", this, &DownloadsWidget::actionDelete);
     }
     else {
         if (download->State == DOWNLOAD_STATE_RUNNING) {
@@ -279,7 +279,7 @@ void DownloadsWidget::actionSync()
     bool ok = false;
     bool result = HttpReqGetOTP("download", fileId, *adaptixWidget->GetProfile(), &message, &ok);
     if (!result) {
-        MessageError("Response timeout");
+        MessageError("响应超时");
         return;
     }
     if (!ok) {
@@ -293,7 +293,7 @@ void DownloadsWidget::actionSync()
     if (adaptixWidget && adaptixWidget->GetProfile())
         baseDir = QDir(adaptixWidget->GetProfile()->GetProjectDir()).filePath(fileName);
 
-    NonBlockingDialogs::getSaveFileName(this, "Save File", baseDir, "All Files (*.*)",
+    NonBlockingDialogs::getSaveFileName(this, "保存文件", baseDir, "所有文件 (*.*)",
         [this, otp](const QString& savedPath) {
             if (savedPath.isEmpty())
                 return;
@@ -318,7 +318,7 @@ void DownloadsWidget::actionSyncCurl()
     bool ok = false;
     bool result = HttpReqGetOTP("download", fileId, *adaptixWidget->GetProfile(), &message, &ok);
     if (!result) {
-        MessageError("Response timeout");
+        MessageError("响应超时");
         return;
     }
     if (!ok) {
@@ -354,7 +354,7 @@ void DownloadsWidget::actionSyncWget()
     bool ok = false;
     bool result = HttpReqGetOTP("download", fileId, *adaptixWidget->GetProfile(), &message, &ok);
     if (!result) {
-        MessageError("Response timeout");
+        MessageError("响应超时");
         return;
     }
     if (!ok) {
@@ -398,6 +398,6 @@ void DownloadsWidget::actionDelete()
 
     HttpReqDownloadDelete(files, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }

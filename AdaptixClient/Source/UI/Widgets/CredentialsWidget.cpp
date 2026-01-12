@@ -241,13 +241,13 @@ void CredentialsWidget::UpdateFilterComboBoxes() const
     storageComboBox->blockSignals(true);
 
     typeComboBox->clear();
-    typeComboBox->addItem("All Types");
+    typeComboBox->addItem("所有类型");
     QStringList typeList = types.values();
     typeList.sort();
     typeComboBox->addItems(typeList);
 
     storageComboBox->clear();
-    storageComboBox->addItem("All Storages");
+    storageComboBox->addItem("所有存储");
     QStringList storageList = storages.values();
     storageList.sort();
     storageComboBox->addItems(storageList);
@@ -327,7 +327,7 @@ void CredentialsWidget::onFilterUpdate() const
 void CredentialsWidget::onTypeFilterUpdate(const QString &text) const
 {
     QString filterText = text;
-    if (filterText == "All Types")
+    if (filterText == "所有类型")
         filterText.clear();
     proxyModel->setTypeFilter(filterText);
 }
@@ -335,7 +335,7 @@ void CredentialsWidget::onTypeFilterUpdate(const QString &text) const
 void CredentialsWidget::onStorageFilterUpdate(const QString &text) const
 {
     QString filterText = text;
-    if (filterText == "All Storages")
+    if (filterText == "所有存储")
         filterText.clear();
     proxyModel->setStorageFilter(filterText);
 }
@@ -343,7 +343,7 @@ void CredentialsWidget::onStorageFilterUpdate(const QString &text) const
 void CredentialsWidget::handleCredentialsMenu(const QPoint &pos ) const
 {
     auto ctxMenu = QMenu();
-    ctxMenu.addAction("Create", this, &CredentialsWidget::onCreateCreds );
+    ctxMenu.addAction("新建", this, &CredentialsWidget::onCreateCreds );
 
     QModelIndex index = tableView->indexAt(pos);
     if (index.isValid()) {
@@ -357,17 +357,17 @@ void CredentialsWidget::handleCredentialsMenu(const QPoint &pos ) const
             creds.append(taskId);
         }
 
-        ctxMenu.addAction("Edit",   this, &CredentialsWidget::onEditCreds );
-        ctxMenu.addAction("Remove", this, &CredentialsWidget::onRemoveCreds );
+        ctxMenu.addAction("编辑",   this, &CredentialsWidget::onEditCreds );
+        ctxMenu.addAction("移除", this, &CredentialsWidget::onRemoveCreds );
         ctxMenu.addSeparator();
 
         int centerCount = adaptixWidget->ScriptManager->AddMenuCreds(&ctxMenu, "Creds", creds);
         if (centerCount > 0)
             ctxMenu.addSeparator();
 
-        ctxMenu.addAction("Set tag",           this, &CredentialsWidget::onSetTag );
-        ctxMenu.addAction("Export to file",    this, &CredentialsWidget::onExportCreds );
-        ctxMenu.addAction("Copy to clipboard", this, &CredentialsWidget::onCopyToClipboard );
+        ctxMenu.addAction("设置标签",           this, &CredentialsWidget::onSetTag );
+        ctxMenu.addAction("导出到文件",    this, &CredentialsWidget::onExportCreds );
+        ctxMenu.addAction("复制到剪贴板", this, &CredentialsWidget::onCopyToClipboard );
     }
 
     QPoint globalPos = tableView->mapToGlobal(pos);
@@ -473,7 +473,7 @@ void CredentialsWidget::onRemoveCreds() const
 
     HttpReqCredentialsRemoveAsync(listId, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
@@ -483,8 +483,8 @@ void CredentialsWidget::onExportCreds() const
     if (!idx.isValid()) return;
 
     QInputDialog dialog;
-    dialog.setWindowTitle("Format for saving");
-    dialog.setLabelText("Format:");
+    dialog.setWindowTitle("保存格式");
+    dialog.setLabelText("格式：");
     dialog.setTextValue("%realm%\\%username%:%password%");
     QLineEdit *lineEdit = dialog.findChild<QLineEdit*>();
     if (lineEdit) {
@@ -500,14 +500,14 @@ void CredentialsWidget::onExportCreds() const
     if (adaptixWidget && adaptixWidget->GetProfile())
         baseDir = QDir(adaptixWidget->GetProfile()->GetProjectDir()).filePath(QStringLiteral("creds.txt"));
 
-    NonBlockingDialogs::getSaveFileName(const_cast<CredentialsWidget*>(this), "Save credentials", baseDir, "Text Files (*.txt);;All Files (*)",
+    NonBlockingDialogs::getSaveFileName(const_cast<CredentialsWidget*>(this), "保存凭证", baseDir, "文本文件 (*.txt);;所有文件 (*)",
         [this, format](const QString& fileName) {
             if (fileName.isEmpty())
                 return;
 
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly)) {
-                MessageError("Failed to open file for writing");
+                MessageError("无法打开文件进行写入");
                 return;
             }
 
@@ -555,11 +555,11 @@ void CredentialsWidget::onSetTag() const
         return;
 
     bool inputOk;
-    QString newTag = QInputDialog::getText(nullptr, "Set tags", "New tag", QLineEdit::Normal,tag, &inputOk);
+    QString newTag = QInputDialog::getText(nullptr, "设置标签", "新标签", QLineEdit::Normal,tag, &inputOk);
     if ( inputOk ) {
         HttpReqCredentialsSetTagAsync(listId, newTag, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }
@@ -570,7 +570,7 @@ void CredentialsWidget::onCopyToClipboard() const
     if (!idx.isValid()) return;
 
     QInputDialog dialog;
-    dialog.setWindowTitle("Format for clipboard");
+    dialog.setWindowTitle("剪贴板格式");
     dialog.setComboBoxEditable(true);
     dialog.setTextValue("%realm%\\%username%:%password%");
     dialog.setComboBoxItems(QStringList()
@@ -583,7 +583,7 @@ void CredentialsWidget::onCopyToClipboard() const
         << "-u '%username%' -H '%password%' (netexec)"
         << "-u '%username%@%realm%' -p '%password%' (certipy)"
     );
-    dialog.setLabelText("Format:");
+    dialog.setLabelText("格式：");
     QLineEdit *lineEdit = dialog.findChild<QLineEdit*>();
     if (lineEdit)
         lineEdit->setMinimumWidth(400);

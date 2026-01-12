@@ -74,12 +74,12 @@ void BrowserFilesWidget::createUI()
     buttonReload = new QPushButton(QIcon(":/icons/reload"), "", this);
     buttonReload->setIconSize( QSize( 24,24 ));
     buttonReload->setFixedSize(37, 28);
-    buttonReload->setToolTip("Reload");
+    buttonReload->setToolTip("重载");
 
     buttonParent = new QPushButton(QIcon(":/icons/folder"), "", this);
     buttonParent->setIconSize(QSize(24, 24 ));
     buttonParent->setFixedSize(37, 28);
-    buttonParent->setToolTip("Up folder");
+    buttonParent->setToolTip("上级目录");
 
     inputPath = new QLineEdit(this);
 
@@ -94,19 +94,19 @@ void BrowserFilesWidget::createUI()
     buttonDisks = new QPushButton(QIcon(":/icons/storage"), "", this);
     buttonDisks->setIconSize( QSize( 24,24 ));
     buttonDisks->setFixedSize(37, 28);
-    buttonDisks->setToolTip("Disks list");
+    buttonDisks->setToolTip("磁盘列表");
 
     buttonUpload = new QPushButton(QIcon(":/icons/upload"), "", this);
     buttonUpload->setIconSize( QSize( 24,24 ));
     buttonUpload->setFixedSize(37, 28);
-    buttonUpload->setToolTip("Upload File");
+    buttonUpload->setToolTip("上传文件");
 
     line_2 = new QFrame(this);
     line_2->setFrameShape(QFrame::VLine);
     line_2->setMinimumHeight(25);
 
     statusLabel = new QLabel(this);
-    statusLabel->setText("Status: ");
+    statusLabel->setText("状态：");
 
     tableWidget = new QTableWidget(this );
     tableWidget->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -127,7 +127,7 @@ void BrowserFilesWidget::createUI()
         tableWidget->setColumnCount(3);
         tableWidget->setHorizontalHeaderItem( 0, new QTableWidgetItem( "Name" ) );
         tableWidget->setHorizontalHeaderItem( 1, new QTableWidgetItem( "Size" ) );
-        tableWidget->setHorizontalHeaderItem( 2, new QTableWidgetItem( "Last Modified" ) );
+        tableWidget->setHorizontalHeaderItem( 2, new QTableWidgetItem( "修改时间" ) );
         tableWidget->setIconSize(QSize(25, 25));
     }
     else {
@@ -137,7 +137,7 @@ void BrowserFilesWidget::createUI()
         tableWidget->setHorizontalHeaderItem( 2, new QTableWidgetItem( "User" ) );
         tableWidget->setHorizontalHeaderItem( 3, new QTableWidgetItem( "Group" ) );
         tableWidget->setHorizontalHeaderItem( 4, new QTableWidgetItem( "Size" ) );
-        tableWidget->setHorizontalHeaderItem( 5, new QTableWidgetItem( "Last Modified" ) );
+        tableWidget->setHorizontalHeaderItem( 5, new QTableWidgetItem( "修改时间" ) );
         tableWidget->setIconSize(QSize(25, 25));
     }
 
@@ -162,7 +162,7 @@ void BrowserFilesWidget::createUI()
 
     treeBrowserWidget = new QTreeWidget();
     treeBrowserWidget->setSortingEnabled(false);
-    treeBrowserWidget->headerItem()->setText( 0, "Directory Tree" );
+    treeBrowserWidget->headerItem()->setText( 0, "目录树" );
     treeBrowserWidget->setIconSize(QSize(25, 25));
 
     splitter = new QSplitter( this );
@@ -591,7 +591,7 @@ void BrowserFilesWidget::onUpload() const
     if (agent && agent->adaptixWidget && agent->adaptixWidget->GetProfile())
         baseDir = agent->adaptixWidget->GetProfile()->GetProjectDir();
 
-    NonBlockingDialogs::getOpenFileName(const_cast<BrowserFilesWidget*>(this), "Select file", baseDir, "All Files (*.*)",
+    NonBlockingDialogs::getOpenFileName(const_cast<BrowserFilesWidget*>(this), "选择文件", baseDir, "所有文件 (*.*)",
         [this, remotePath](const QString& filePath) {
             if (filePath.isEmpty())
                 return;

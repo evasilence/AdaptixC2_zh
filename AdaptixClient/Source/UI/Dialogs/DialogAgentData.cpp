@@ -13,16 +13,16 @@ DialogAgentData::~DialogAgentData() = default;
 
 void DialogAgentData::createUI()
 {
-    this->setWindowTitle("Set Agent Data");
+    this->setWindowTitle("设置代理数据");
     this->setProperty("Main", "base");
     this->setMinimumWidth(450);
 
-    groupNetwork = new QGroupBox("Network", this);
+    groupNetwork = new QGroupBox("网络", this);
     layoutNetwork = new QGridLayout(groupNetwork);
 
-    labelInternalIP = new QLabel("Internal IP:", this);
+    labelInternalIP = new QLabel("内部 IP：", this);
     inputInternalIP = new QLineEdit(this);
-    labelExternalIP = new QLabel("External IP:", this);
+    labelExternalIP = new QLabel("外部 IP：", this);
     inputExternalIP = new QLineEdit(this);
 
     layoutNetwork->addWidget(labelInternalIP, 0, 0);
@@ -30,14 +30,14 @@ void DialogAgentData::createUI()
     layoutNetwork->addWidget(labelExternalIP, 0, 2);
     layoutNetwork->addWidget(inputExternalIP, 0, 3);
 
-    groupCoding = new QGroupBox("Coding", this);
+    groupCoding = new QGroupBox("编码", this);
     layoutCoding = new QGridLayout(groupCoding);
 
-    labelACP = new QLabel("ACP:", this);
+    labelACP = new QLabel("ACP：", this);
     inputACP = new QSpinBox(this);
     inputACP->setRange(0, 65535);
 
-    labelOemCP = new QLabel("OEM CP:", this);
+    labelOemCP = new QLabel("OEM CP：", this);
     inputOemCP = new QSpinBox(this);
     inputOemCP->setRange(0, 65535);
 
@@ -46,20 +46,20 @@ void DialogAgentData::createUI()
     layoutCoding->addWidget(labelOemCP,  0, 2);
     layoutCoding->addWidget(inputOemCP,  0, 3);
 
-    groupProcess = new QGroupBox("Process", this);
+    groupProcess = new QGroupBox("进程", this);
     layoutProcess = new QGridLayout(groupProcess);
 
-    labelProcess = new QLabel("Process:", this);
+    labelProcess = new QLabel("进程：", this);
     inputProcess = new QLineEdit(this);
 
     inputArch = new QComboBox(this);
     inputArch->addItems({"x86", "x64"});
 
-    inputElevated = new QCheckBox("Elevated", this);
+    inputElevated = new QCheckBox("提升", this);
 
-    labelPid = new QLabel("PID:", this);
+    labelPid = new QLabel("PID：", this);
     inputPid = new QLineEdit(this);
-    labelTid = new QLabel("TID:", this);
+    labelTid = new QLabel("TID：", this);
     inputTid = new QLineEdit(this);
 
     layoutProcess->addWidget(labelProcess,   0, 0);
@@ -71,20 +71,20 @@ void DialogAgentData::createUI()
     layoutProcess->addWidget(labelTid,       1, 2);
     layoutProcess->addWidget(inputTid,       1, 3);
 
-    groupOS = new QGroupBox("OS", this);
+    groupOS = new QGroupBox("操作系统", this);
     layoutOS = new QGridLayout(groupOS);
 
-    labelOs = new QLabel("OS:", this);
+    labelOs = new QLabel("操作系统：", this);
     inputOs = new QComboBox(this);
     inputOs->addItem("Windows", OS_WINDOWS);
     inputOs->addItem("Linux", OS_LINUX);
     inputOs->addItem("macOS", OS_MAC);
-    inputOs->addItem("Unknown", OS_UNKNOWN);
+    inputOs->addItem("未知", OS_UNKNOWN);
 
     inputOsDesc = new QLineEdit(this);
-    inputOsDesc->setPlaceholderText("description");
+    inputOsDesc->setPlaceholderText("描述");
 
-    labelGmtOffset = new QLabel("GMT Offset:", this);
+    labelGmtOffset = new QLabel("GMT 偏移：", this);
     inputGmtOffset = new QSpinBox(this);
     inputGmtOffset->setRange(-12, 14);
 
@@ -94,19 +94,19 @@ void DialogAgentData::createUI()
     layoutOS->addWidget(labelGmtOffset, 0, 3);
     layoutOS->addWidget(inputGmtOffset, 0, 4);
 
-    groupContext = new QGroupBox("Context", this);
+    groupContext = new QGroupBox("上下文", this);
     layoutContext = new QGridLayout(groupContext);
 
-    labelDomain = new QLabel("Domain:", this);
+    labelDomain = new QLabel("域：", this);
     inputDomain = new QLineEdit(this);
 
-    labelComputer = new QLabel("Computer:", this);
+    labelComputer = new QLabel("计算机：", this);
     inputComputer = new QLineEdit(this);
 
-    labelUsername = new QLabel("Username:", this);
+    labelUsername = new QLabel("用户名：", this);
     inputUsername = new QLineEdit(this);
 
-    labelImpersonated = new QLabel("Impersonated:", this);
+    labelImpersonated = new QLabel("模拟用户：", this);
     inputImpersonated = new QLineEdit(this);
 
     layoutContext->addWidget(labelDomain,       0, 0);
@@ -118,10 +118,10 @@ void DialogAgentData::createUI()
     layoutContext->addWidget(labelImpersonated, 1, 2);
     layoutContext->addWidget(inputImpersonated, 1, 3);
 
-    buttonUpdate = new QPushButton("Update", this);
+    buttonUpdate = new QPushButton("更新", this);
     buttonUpdate->setProperty("ButtonStyle", "dialog");
 
-    buttonCancel = new QPushButton("Cancel", this);
+    buttonCancel = new QPushButton("取消", this);
     buttonCancel->setProperty("ButtonStyle", "dialog");
 
     horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);

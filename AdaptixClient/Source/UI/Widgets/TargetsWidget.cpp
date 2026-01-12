@@ -56,7 +56,7 @@ void TargetsWidget::createUI()
 
     autoSearchCheck = new QCheckBox("auto", searchWidget);
     autoSearchCheck->setChecked(true);
-    autoSearchCheck->setToolTip("Auto search on text change. If unchecked, press Enter to search.");
+    autoSearchCheck->setToolTip("文本改变时自动搜索。如未勾选，按 Enter 键搜索。");
 
     hideButton = new ClickableLabel("  x  ");
     hideButton->setCursor(Qt::PointingHandCursor);
@@ -263,7 +263,7 @@ void TargetsWidget::onFilterUpdate() const
 void TargetsWidget::handleTargetsMenu(const QPoint &pos ) const
 {
     auto ctxMenu = QMenu();
-    ctxMenu.addAction("Create", this, &TargetsWidget::onCreateTarget );
+    ctxMenu.addAction("新建", this, &TargetsWidget::onCreateTarget );
 
     QModelIndex index = tableView->indexAt(pos);
     if (index.isValid()) {
@@ -282,17 +282,17 @@ void TargetsWidget::handleTargetsMenu(const QPoint &pos ) const
         if (topCount > 0)
             ctxMenu.addSeparator();
 
-        ctxMenu.addAction("Edit",   this, &TargetsWidget::onEditTarget );
-        ctxMenu.addAction("Remove", this, &TargetsWidget::onRemoveTarget );
+        ctxMenu.addAction("编辑",   this, &TargetsWidget::onEditTarget );
+        ctxMenu.addAction("移除", this, &TargetsWidget::onRemoveTarget );
         ctxMenu.addSeparator();
 
         int centerCount = adaptixWidget->ScriptManager->AddMenuTargets(&ctxMenu, "TargetsCenter", targets);
         if (centerCount > 0)
             ctxMenu.addSeparator();
 
-        ctxMenu.addAction("Set tag",           this, &TargetsWidget::onSetTag );
-        ctxMenu.addAction("Export to file",    this, &TargetsWidget::onExportTarget );
-        ctxMenu.addAction("Copy to clipboard", this, &TargetsWidget::onCopyToClipboard );
+        ctxMenu.addAction("设置标签",           this, &TargetsWidget::onSetTag );
+        ctxMenu.addAction("导出到文件",    this, &TargetsWidget::onExportTarget );
+        ctxMenu.addAction("复制到剪贴板", this, &TargetsWidget::onCopyToClipboard );
         int bottomCount = adaptixWidget->ScriptManager->AddMenuTargets(&ctxMenu, "TargetsBottom", targets);
     }
     QPoint globalPos = tableView->mapToGlobal(pos);
@@ -399,7 +399,7 @@ void TargetsWidget::onRemoveTarget() const
 
     HttpReqTargetRemoveAsync(listId, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 
@@ -424,11 +424,11 @@ void TargetsWidget::onSetTag() const
         return;
 
     bool inputOk;
-    QString newTag = QInputDialog::getText(nullptr, "Set tags", "New tag", QLineEdit::Normal,tag, &inputOk);
+    QString newTag = QInputDialog::getText(nullptr, "设置标签", "新标签", QLineEdit::Normal,tag, &inputOk);
     if ( inputOk ) {
         HttpReqTargetSetTagAsync(listId, newTag, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }
@@ -439,8 +439,8 @@ void TargetsWidget::onExportTarget() const
     if (!idx.isValid()) return;
 
     QInputDialog dialog;
-    dialog.setWindowTitle("Format for saving");
-    dialog.setLabelText("Format:");
+    dialog.setWindowTitle("保存格式");
+    dialog.setLabelText("格式：");
     dialog.setTextValue("%computer%.%domain% - %address%");
     QLineEdit *lineEdit = dialog.findChild<QLineEdit*>();
     if (lineEdit)
@@ -456,14 +456,14 @@ void TargetsWidget::onExportTarget() const
     if (adaptixWidget && adaptixWidget->GetProfile())
         baseDir = QDir(adaptixWidget->GetProfile()->GetProjectDir()).filePath(QStringLiteral("targets.txt"));
 
-    NonBlockingDialogs::getSaveFileName(const_cast<TargetsWidget*>(this), "Save Targets", baseDir, "Text Files (*.txt);;All Files (*)",
+    NonBlockingDialogs::getSaveFileName(const_cast<TargetsWidget*>(this), "保存目标", baseDir, "文本文件 (*.txt);;所有文件 (*)",
         [this, format](const QString& fileName) {
             if (fileName.isEmpty())
                 return;
 
             QFile file(fileName);
             if (!file.open(QIODevice::WriteOnly)) {
-                MessageError("Failed to open file for writing");
+                MessageError("无法打开文件进行写入");
                 return;
             }
 
@@ -496,8 +496,8 @@ void TargetsWidget::onCopyToClipboard() const
     if (!idx.isValid()) return;
 
     QInputDialog dialog;
-    dialog.setWindowTitle("Format for clipboard");
-    dialog.setLabelText("Format:");
+    dialog.setWindowTitle("剪贴板格式");
+    dialog.setLabelText("格式：");
     dialog.setTextValue("%computer%.%domain% - %address%");
     QLineEdit *lineEdit = dialog.findChild<QLineEdit*>();
     if (lineEdit)

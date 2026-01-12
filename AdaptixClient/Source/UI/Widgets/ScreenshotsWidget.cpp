@@ -323,7 +323,7 @@ void ScreenshotsWidget::actionNote()
     if (inputOk) {
         HttpReqScreenSetNoteAsync(listId, newNote, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }
@@ -347,7 +347,7 @@ void ScreenshotsWidget::actionDownload()
 
             QFile file(filePath);
             if (!file.open(QIODevice::WriteOnly)) {
-                MessageError("Failed to open file for writing");
+                MessageError("无法打开文件进行写入");
                 return;
             }
 
@@ -355,8 +355,8 @@ void ScreenshotsWidget::actionDownload()
             file.close();
 
             QInputDialog inputDialog;
-            inputDialog.setWindowTitle("Sync file");
-            inputDialog.setLabelText("File saved to:");
+            inputDialog.setWindowTitle("同步文件");
+            inputDialog.setLabelText("文件保存至：");
             inputDialog.setTextEchoMode(QLineEdit::Normal);
             inputDialog.setTextValue(filePath);
             inputDialog.adjustSize();
@@ -373,7 +373,7 @@ void ScreenshotsWidget::actionDelete()
 
     HttpReqScreenRemoveAsync(listId, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }
 

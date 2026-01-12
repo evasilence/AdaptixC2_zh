@@ -348,7 +348,7 @@ void ConsoleWidget::ProcessCmdResult(const QString &commandLine, const Commander
                 adaptixWidget->PostHooksJS.remove(hookId);
             if (cmdResult.handler.isSet && adaptixWidget->PostHandlersJS.contains(handlerId))
                 adaptixWidget->PostHandlersJS.remove(handlerId);
-            MessageError("Response timeout");
+            MessageError("响应超时");
             return;
         }
         if (!ok) {
@@ -399,7 +399,7 @@ void ConsoleWidget::ProcessCmdResult(const QString &commandLine, const Commander
                     adaptixWidget->PostHooksJS.remove(hookId);
                 if (cmdResult.handler.isSet && adaptixWidget->PostHandlersJS.contains(handlerId))
                     adaptixWidget->PostHandlersJS.remove(handlerId);
-                MessageError("Response timeout");
+                MessageError("响应超时");
                 return;
             }
         });
@@ -499,7 +499,7 @@ void ConsoleWidget::handleShowHistory()
         return;
 
     QDialog *historyDialog = new QDialog(this);
-    historyDialog->setWindowTitle(tr("Command History"));
+    historyDialog->setWindowTitle(tr("命令历史"));
     historyDialog->setAttribute(Qt::WA_DeleteOnClose);
 
 
@@ -509,7 +509,7 @@ void ConsoleWidget::handleShowHistory()
     historyList->setAlternatingRowColors(true);
     historyList->setItemDelegate(new QStyledItemDelegate(historyList));
 
-    QPushButton *closeButton = new QPushButton(tr("Close"), historyDialog);
+    QPushButton *closeButton = new QPushButton(tr("关闭"), historyDialog);
 
     QVBoxLayout *layout = new QVBoxLayout(historyDialog);
     layout->addWidget(historyList);
@@ -527,7 +527,7 @@ void ConsoleWidget::handleShowHistory()
     }
 
     if (history.isEmpty()) {
-        QListWidgetItem *item = new QListWidgetItem(tr("No command history available"));
+        QListWidgetItem *item = new QListWidgetItem(tr("无命令历史"));
         item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
         historyList->addItem(item);
     }

@@ -16,26 +16,26 @@ MainUI::MainUI()
     this->setWindowTitle( FRAMEWORK_VERSION );
     this->setProperty("Main", "base");
 
-    auto newProjectAction = new QAction("New Project", this);
+    auto newProjectAction = new QAction("新建项目", this);
     connect(newProjectAction, &QAction::triggered, this, &MainUI::onNewProject);
-    auto closeProjectAction = new QAction("Close Project", this);
+    auto closeProjectAction = new QAction("关闭项目", this);
     connect(closeProjectAction, &QAction::triggered, this, &MainUI::onCloseProject);
 
-    auto menuProject = new QMenu("Projects", this);
+    auto menuProject = new QMenu("项目", this);
     menuProject->addAction(newProjectAction);
     menuProject->addAction(closeProjectAction);
 
-    auto axConsoleAction = new QAction("AxScript console ", this);
+    auto axConsoleAction = new QAction("AxScript 控制台", this);
     connect(axConsoleAction, &QAction::triggered, this, &MainUI::onAxScriptConsole);
-    auto scriptManagerAction = new QAction("Script manager", this);
+    auto scriptManagerAction = new QAction("脚本管理器", this);
     connect(scriptManagerAction, &QAction::triggered, this, &MainUI::onScriptManager);
 
     auto menuExtender = new QMenu("AxScript", this);
     menuExtender->addAction(axConsoleAction);
     menuExtender->addAction(scriptManagerAction);
 
-    auto menuSettings = new QMenu("Settings", this);
-    auto settingsAction = new QAction("Open settings", this);
+    auto menuSettings = new QMenu("设置", this);
+    auto settingsAction = new QAction("打开设置", this);
     connect(settingsAction, &QAction::triggered, this, &MainUI::onSettings);
     menuSettings->addAction(settingsAction);
 

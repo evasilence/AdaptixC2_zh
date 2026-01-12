@@ -25,43 +25,43 @@ DialogListener::~DialogListener() = default;
 
 void DialogListener::createUI()
 {
-    this->setWindowTitle("Create Listener");
+    this->setWindowTitle("创建监听器");
     this->setProperty("Main", "base");
 
     listenerNameLabel = new QLabel(this);
-    listenerNameLabel->setText("Name:");
+    listenerNameLabel->setText("名称：");
 
     inputListenerName = new QLineEdit(this);
-    inputListenerName->setToolTip("Listener name");
+    inputListenerName->setToolTip("监听器名称");
 
     profileLabel = new QLabel(this);
-    profileLabel->setText("Profile:");
+    profileLabel->setText("配置：");
 
     inputProfileName = new QLineEdit(this);
-    inputProfileName->setToolTip("Profile name");
+    inputProfileName->setToolTip("配置名称");
 
     actionSaveProfile = new QAction(this);
     actionSaveProfile->setCheckable(true);
     actionSaveProfile->setChecked(true);
-    actionSaveProfile->setToolTip("Click to toggle: Save as profile");
+    actionSaveProfile->setToolTip("点击切换：保存为配置");
     actionSaveProfile->setIcon(QIcon(":/icons/check"));
     inputProfileName->addAction(actionSaveProfile, QLineEdit::TrailingPosition);
 
     listenerTypeLabel = new QLabel(this);
-    listenerTypeLabel->setText("Protocol:");
+    listenerTypeLabel->setText("协议：");
     listenerTypeCombobox = new QComboBox(this);
 
     listenerLabel = new QLabel(this);
-    listenerLabel->setText("Config:");
+    listenerLabel->setText("配置：");
     listenerCombobox = new QComboBox(this);
 
     menuContext = new QMenu(this);
-    menuContext->addAction("Rename", this, &DialogListener::onProfileRename);
-    menuContext->addAction("Remove", this, &DialogListener::onProfileRemove);
+    menuContext->addAction("重命名", this, &DialogListener::onProfileRename);
+    menuContext->addAction("移除", this, &DialogListener::onProfileRemove);
 
     label_Profiles = new QLabel(this);
     label_Profiles->setAlignment(Qt::AlignCenter);
-    label_Profiles->setText("Profiles");
+    label_Profiles->setText("配置");
 
     cardWidget = new CardListWidget(this);
     cardWidget->setFixedWidth(220);
@@ -72,20 +72,20 @@ void DialogListener::createUI()
 
     buttonNewProfile = new QPushButton(this);
     buttonNewProfile->setProperty("ButtonStyle", "dialog");
-    buttonNewProfile->setText("New Profile");
+    buttonNewProfile->setText("新建配置");
     buttonNewProfile->setMinimumSize(QSize(10, 30));
 
     buttonLoad = new QPushButton(QIcon(":/icons/file_open"), "", this);
     buttonLoad->setProperty("ButtonStyle", "dialog");
     buttonLoad->setIconSize(QSize(20, 20));
     buttonLoad->setFixedSize(QSize(30, 30));
-    buttonLoad->setToolTip("Load profile from file");
+    buttonLoad->setToolTip("从文件加载配置");
 
     buttonSave = new QPushButton(QIcon(":/icons/save_as"), "", this);
     buttonSave->setProperty("ButtonStyle", "dialog");
     buttonSave->setIconSize(QSize(20, 20));
     buttonSave->setFixedSize(QSize(30, 30));
-    buttonSave->setToolTip("Save profile to file");
+    buttonSave->setToolTip("保存配置到文件");
 
     auto profileButtonsLayout = new QHBoxLayout();
     profileButtonsLayout->addWidget(buttonNewProfile);
@@ -106,12 +106,12 @@ void DialogListener::createUI()
     stackGridLayout->addWidget(configStackWidget, 0, 0, 1, 1 );
 
     listenerConfigGroupbox = new QGroupBox(this);
-    listenerConfigGroupbox->setTitle("Listener config");
+    listenerConfigGroupbox->setTitle("监听器配置");
     listenerConfigGroupbox->setLayout(stackGridLayout);
 
     buttonCreate = new QPushButton(this);
     buttonCreate->setProperty("ButtonStyle", "dialog_apply");
-    buttonCreate->setText("Create");
+    buttonCreate->setText("创建");
     buttonCreate->setFixedWidth(160);
     buttonCreate->setFocus();
 
@@ -220,7 +220,7 @@ void DialogListener::SetProfile(const AuthProfile &profile)
 
 void DialogListener::SetEditMode(const QString &name)
 {
-    this->setWindowTitle( "Edit Listener" );
+    this->setWindowTitle( "编辑监听器" );
     inputListenerName->setText(name);
     inputListenerName->setDisabled(true);
     listenerCombobox->setDisabled(true);
@@ -229,8 +229,8 @@ void DialogListener::SetEditMode(const QString &name)
     editMode = true;
 
     inputProfileName->setReadOnly(true);
-    inputProfileName->setToolTip("Profile name (read-only in edit mode)");
-    actionSaveProfile->setToolTip("Click to toggle: Update profile data in database");
+    inputProfileName->setToolTip("配置名称（编辑模式下只读）");
+    actionSaveProfile->setToolTip("点击切换：更新数据库中的配置数据");
 
     cardWidget->setEnabled(false);
     buttonNewProfile->setEnabled(false);
@@ -308,7 +308,7 @@ void DialogListener::saveProfile(const QString &profileName, const QString &conf
 void DialogListener::onButtonLoad()
 {
     QString baseDir = authProfile.GetProjectDir();
-    NonBlockingDialogs::getOpenFileName(this, "Select file", baseDir, "JSON files (*.json)",
+    NonBlockingDialogs::getOpenFileName(this, "选择文件", baseDir, "JSON 文件 (*.json)",
         [this](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
@@ -323,7 +323,7 @@ void DialogListener::onButtonLoad()
             QJsonParseError parseError;
             QJsonDocument document = QJsonDocument::fromJson(fileContent, &parseError);
             if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-                MessageError("Error JSON parse");
+                MessageError("JSON 解析错误");
                 return;
             }
             QJsonObject jsonObject = document.object();
@@ -344,7 +344,7 @@ void DialogListener::onButtonLoad()
             int typeIndex = listenerCombobox->findText( configType );
 
             if(typeIndex == -1 || !ax_uis.contains(configType)) {
-                MessageError("No such listener exists");
+                MessageError("不存在该监听器");
                 return;
             }
 
@@ -372,14 +372,14 @@ void DialogListener::onButtonSave()
     QString tmpFilename = configName + "_listener_config.json";
     QString baseDir     = authProfile.GetProjectDir();
     QString initialPath = QDir(baseDir).filePath(tmpFilename);
-    NonBlockingDialogs::getSaveFileName(this, "Save File", initialPath, "JSON files (*.json)",
+    NonBlockingDialogs::getSaveFileName(this, "保存文件", initialPath, "JSON 文件 (*.json)",
         [this, fileContent](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
 
             QFile file(filePath);
             if (!file.open(QIODevice::WriteOnly)) {
-                MessageError("Failed to open file for writing");
+                MessageError("无法打开文件进行写入");
                 return;
             }
 
@@ -387,8 +387,8 @@ void DialogListener::onButtonSave()
             file.close();
 
             QInputDialog inputDialog;
-            inputDialog.setWindowTitle("Save config");
-            inputDialog.setLabelText("File saved to:");
+            inputDialog.setWindowTitle("保存配置");
+            inputDialog.setLabelText("文件保存至：");
             inputDialog.setTextEchoMode(QLineEdit::Normal);
             inputDialog.setTextValue(filePath);
             inputDialog.adjustSize();
@@ -462,7 +462,7 @@ void DialogListener::onProfileSelected()
     QJsonParseError parseError;
     QJsonDocument document = QJsonDocument::fromJson(profileData.toUtf8(), &parseError);
     if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-        MessageError("Error parsing profile data");
+        MessageError("解析配置数据错误");
         return;
     }
 
@@ -526,7 +526,7 @@ void DialogListener::onProfileRename()
         return;
 
     bool ok;
-    QString newName = QInputDialog::getText(this, "Rename Profile", "New profile name:", 
+    QString newName = QInputDialog::getText(this, "重命名配置", "新配置名:", 
                                              QLineEdit::Normal, oldName, &ok);
     if (!ok || newName.trimmed().isEmpty() || newName == oldName)
         return;

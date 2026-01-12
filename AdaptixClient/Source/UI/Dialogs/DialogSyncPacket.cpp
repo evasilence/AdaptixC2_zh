@@ -18,7 +18,7 @@ DialogSyncPacket::DialogSyncPacket(QObject* parent) : QObject(parent)
     splashScreen = new CustomSplashScreen(this);
     splashScreen->setPixmap(QPixmap(":/SyncLogo"));
 
-    logNameLabel = new QLabel("Log synchronization");
+    logNameLabel = new QLabel("日志同步");
 
     logProgressLabel = new QLabel();
     logProgressLabel->setAlignment(Qt::AlignCenter);
@@ -91,7 +91,7 @@ void DialogSyncPacket::finish()
     qint64 elapsed = QDateTime::currentMSecsSinceEpoch() - startTime;
     double seconds = elapsed / 1000.0;
 
-    QString completeMsg = QString("Synchronization complete! %1 items in %2s")
+    QString completeMsg = QString("同步完成！%1 项，耗时 %2 秒")
         .arg(totalLogs)
         .arg(seconds, 0, 'f', 2);
 
@@ -108,9 +108,9 @@ void DialogSyncPacket::finish()
 
 void DialogSyncPacket::error(const QString& message)
 {
-    logProgressLabel->setText("Error: " + message);
+    logProgressLabel->setText("错误：" + message);
     progressBar->setValue(0);
-    cancelButton->setText("Close");
+    cancelButton->setText("关闭");
     cancelButton->setEnabled(true);
     disconnect(cancelButton, &QPushButton::clicked, this, &DialogSyncPacket::onCancel);
     connect(cancelButton, &QPushButton::clicked, splashScreen, &QWidget::close);

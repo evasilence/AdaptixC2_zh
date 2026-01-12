@@ -47,7 +47,7 @@ void WebSocketWorker::is_error(QAbstractSocket::SocketError error)
     QString errMsg = webSocket->errorString();
 
     this->ok = false;
-    this->message = "Login failure";
+    this->message = "登录失败";
     if (errMsg.contains("511") || errMsg.contains("Network Authentication Required"))
         this->message = "User already connected";
 

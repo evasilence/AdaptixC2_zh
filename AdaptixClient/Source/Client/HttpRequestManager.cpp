@@ -182,7 +182,7 @@ void HttpRequestManager::processResponse(QNetworkReply* reply)
             message = "Invalid JSON response";
         }
     } else if (reply->error() == QNetworkReply::OperationCanceledError) {
-        message = "Request canceled";
+        message = "请求已取消";
     } else {
         message = reply->errorString();
 
@@ -280,10 +280,10 @@ void HttpRequestManager::onRequestTimeout()
             }
 
             if (ctx.callback) {
-                ctx.callback(false, "Request timeout", QJsonObject());
+                ctx.callback(false, "请求超时", QJsonObject());
             }
 
-            Q_EMIT requestFinished(requestId, false, "Request timeout");
+            Q_EMIT requestFinished(requestId, false, "请求超时");
             cleanupRequest(requestId);
         }
     }

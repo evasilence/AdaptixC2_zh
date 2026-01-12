@@ -56,7 +56,7 @@ void TunnelsWidget::createUI()
 
     autoSearchCheck = new QCheckBox("auto", searchWidget);
     autoSearchCheck->setChecked(true);
-    autoSearchCheck->setToolTip("Auto search on text change. If unchecked, press Enter to search.");
+    autoSearchCheck->setToolTip("文本改变时自动搜索。如未勾选，按 Enter 键搜索。");
 
     hideButton = new ClickableLabel("  x  ");
     hideButton->setCursor(Qt::PointingHandCursor);
@@ -197,7 +197,7 @@ void TunnelsWidget::handleTunnelsMenu(const QPoint &pos) const
 {
     QMenu tunnelsMenu = QMenu();
 
-    tunnelsMenu.addAction("Set info", this, &TunnelsWidget::actionSetInfo);
+    tunnelsMenu.addAction("设置信息", this, &TunnelsWidget::actionSetInfo);
     tunnelsMenu.addAction("Stop",     this, &TunnelsWidget::actionStopTunnel);
 
     QPoint globalPos = tableView->mapToGlobal(pos);
@@ -218,11 +218,11 @@ void TunnelsWidget::actionSetInfo() const
     QString info     = tunnelsModel->data(tunnelsModel->index(sourceIndex.row(), TUC_Info),     Qt::DisplayRole).toString();
 
     bool inputOk;
-    QString newInfo = QInputDialog::getText(nullptr, "Set info", "Info:", QLineEdit::Normal, info, &inputOk);
+    QString newInfo = QInputDialog::getText(nullptr, "设置信息", "信息:", QLineEdit::Normal, info, &inputOk);
     if (inputOk) {
         HttpReqTunnelSetInfoAsync(tunnelId, newInfo, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
 }
@@ -248,6 +248,6 @@ void TunnelsWidget::actionStopTunnel() const
 
     HttpReqTunnelStopAsync(tunnelId, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
         if (!success)
-            MessageError(message.isEmpty() ? "Response timeout" : message);
+            MessageError(message.isEmpty() ? "响应超时" : message);
     });
 }

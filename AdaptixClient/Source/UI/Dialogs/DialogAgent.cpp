@@ -29,25 +29,25 @@ DialogAgent::~DialogAgent() = default;
 
 void DialogAgent::createUI()
 {
-    this->setWindowTitle("Generate Agent");
+    this->setWindowTitle("生成代理");
     this->setProperty("Main", "base");
 
-    listenerLabel = new QLabel("Listener:", this);
+    listenerLabel = new QLabel("监听器：", this);
     listenerInput = new QLineEdit(this);
     listenerInput->setReadOnly(true);
 
-    agentLabel    = new QLabel("Agent:", this);
+    agentLabel    = new QLabel("代理：", this);
     agentCombobox = new QComboBox(this);
 
-    profileLabel = new QLabel("Profile:", this);
+    profileLabel = new QLabel("配置：", this);
 
     inputProfileName = new QLineEdit(this);
-    inputProfileName->setToolTip("Profile name");
+    inputProfileName->setToolTip("配置名称");
 
     actionSaveProfile = new QAction(this);
     actionSaveProfile->setCheckable(true);
     actionSaveProfile->setChecked(true);
-    actionSaveProfile->setToolTip("Click to toggle: Save as profile");
+    actionSaveProfile->setToolTip("点击切换：保存为配置");
     actionSaveProfile->setIcon(QIcon(":/icons/check"));
     inputProfileName->addAction(actionSaveProfile, QLineEdit::TrailingPosition);
 
@@ -58,21 +58,21 @@ void DialogAgent::createUI()
     configStackWidget = new QStackedWidget(this);
     stackGridLayout->addWidget(configStackWidget, 0, 0, 1, 1);
 
-    agentConfigGroupbox = new QGroupBox("Agent config", this);
+    agentConfigGroupbox = new QGroupBox("代理配置", this);
     agentConfigGroupbox->setLayout(stackGridLayout);
 
-    generateButton = new QPushButton("Generate", this);
+    generateButton = new QPushButton("生成", this);
     generateButton->setProperty("ButtonStyle", "dialog_apply");
     generateButton->setFixedWidth(160);
     generateButton->setFocus();
 
     menuContext = new QMenu(this);
-    menuContext->addAction("Rename", this, &DialogAgent::onProfileRename);
-    menuContext->addAction("Remove", this, &DialogAgent::onProfileRemove);
+    menuContext->addAction("重命名", this, &DialogAgent::onProfileRename);
+    menuContext->addAction("移除", this, &DialogAgent::onProfileRemove);
 
     label_Profiles = new QLabel(this);
     label_Profiles->setAlignment(Qt::AlignCenter);
-    label_Profiles->setText("Profiles");
+    label_Profiles->setText("配置");
 
     cardWidget = new CardListWidget(this);
     cardWidget->setFixedWidth(220);
@@ -83,20 +83,20 @@ void DialogAgent::createUI()
 
     buttonNewProfile = new QPushButton(this);
     buttonNewProfile->setProperty("ButtonStyle", "dialog");
-    buttonNewProfile->setText("New Profile");
+    buttonNewProfile->setText("新建配置");
     buttonNewProfile->setMinimumSize(QSize(10, 30));
 
     buttonLoad = new QPushButton(QIcon(":/icons/file_open"), "", this);
     buttonLoad->setProperty("ButtonStyle", "dialog");
     buttonLoad->setIconSize(QSize(20, 20));
     buttonLoad->setFixedSize(QSize(30, 30));
-    buttonLoad->setToolTip("Load profile from file");
+    buttonLoad->setToolTip("从文件加载配置");
 
     buttonSave = new QPushButton(QIcon(":/icons/save_as"), "", this);
     buttonSave->setProperty("ButtonStyle", "dialog");
     buttonSave->setIconSize(QSize(20, 20));
     buttonSave->setFixedSize(QSize(30, 30));
-    buttonSave->setToolTip("Save profile to file");
+    buttonSave->setToolTip("保存配置到文件");
 
     auto leftPanelLayout = new QGridLayout();
     leftPanelLayout->setVerticalSpacing(8);
@@ -224,7 +224,7 @@ void DialogAgent::onButtonGenerate()
 
         QStringList parts = message.split(":");
         if (parts.size() != 2) {
-            MessageError("The response format is not supported");
+            MessageError("不支持的响应格式");
             return;
         }
 
@@ -232,14 +232,14 @@ void DialogAgent::onButtonGenerate()
         QString    filename    = QString( QByteArray::fromBase64(parts[0].toUtf8()));
         QString    initialPath = QDir(baseDir).filePath(filename);
 
-        NonBlockingDialogs::getSaveFileName(this, "Save File", initialPath, "All Files (*.*)",
+        NonBlockingDialogs::getSaveFileName(this, "保存文件", initialPath, "所有文件 (*.*)",
             [this, content](const QString& filePath) {
                 if (filePath.isEmpty())
                     return;
 
                 QFile file(filePath);
                 if (!file.open(QIODevice::WriteOnly)) {
-                    MessageError("Failed to open file for writing");
+                    MessageError("无法打开文件进行写入");
                     return;
                 }
 
@@ -247,8 +247,8 @@ void DialogAgent::onButtonGenerate()
                 file.close();
 
                 QInputDialog inputDialog;
-                inputDialog.setWindowTitle("Save agent");
-                inputDialog.setLabelText("File saved to:");
+                inputDialog.setWindowTitle("保存代理");
+                inputDialog.setLabelText("文件保存至：");
                 inputDialog.setTextEchoMode(QLineEdit::Normal);
                 inputDialog.setTextValue(filePath);
                 inputDialog.adjustSize();
@@ -263,7 +263,7 @@ void DialogAgent::onButtonGenerate()
 void DialogAgent::onButtonLoad()
 {
     QString baseDir = authProfile.GetProjectDir();
-    NonBlockingDialogs::getOpenFileName(this, "Select file", baseDir, "JSON files (*.json)",
+    NonBlockingDialogs::getOpenFileName(this, "选择文件", baseDir, "JSON 文件 (*.json)",
         [this](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
@@ -278,7 +278,7 @@ void DialogAgent::onButtonLoad()
             QJsonParseError parseError;
             QJsonDocument document = QJsonDocument::fromJson(fileContent, &parseError);
             if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-                MessageError("Error JSON parse");
+                MessageError("JSON 解析错误");
                 return;
             }
             QJsonObject jsonObject = document.object();
@@ -332,14 +332,14 @@ void DialogAgent::onButtonSave()
     QString tmpFilename = QString("%1_config.json").arg(configType);
     QString baseDir     = authProfile.GetProjectDir();
     QString initialPath = QDir(baseDir).filePath(tmpFilename);
-    NonBlockingDialogs::getSaveFileName(this, "Save File", initialPath, "JSON files (*.json)",
+    NonBlockingDialogs::getSaveFileName(this, "保存文件", initialPath, "JSON files (*.json)",
         [this, fileContent](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
 
             QFile file(filePath);
             if (!file.open(QIODevice::WriteOnly)) {
-                MessageError("Failed to open file for writing");
+                MessageError("无法打开文件进行写入");
                 return;
             }
 
@@ -347,7 +347,7 @@ void DialogAgent::onButtonSave()
             file.close();
 
             QInputDialog inputDialog;
-            inputDialog.setWindowTitle("Save config");
+            inputDialog.setWindowTitle("保存配置");
             inputDialog.setLabelText("File saved to:");
             inputDialog.setTextEchoMode(QLineEdit::Normal);
             inputDialog.setTextValue(filePath);
@@ -481,7 +481,7 @@ void DialogAgent::onProfileSelected()
     QJsonParseError parseError;
     QJsonDocument document = QJsonDocument::fromJson(profileData.toUtf8(), &parseError);
     if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-        MessageError("Error parsing profile data");
+        MessageError("解析配置数据错误");
         return;
     }
 
@@ -541,7 +541,7 @@ void DialogAgent::onProfileRename()
         return;
 
     bool ok;
-    QString newName = QInputDialog::getText(this, "Rename Profile", "New profile name:", QLineEdit::Normal, oldName, &ok);
+    QString newName = QInputDialog::getText(this, "重命名配置", "新配置名:", QLineEdit::Normal, oldName, &ok);
     if (!ok || newName.trimmed().isEmpty() || newName == oldName)
         return;
 

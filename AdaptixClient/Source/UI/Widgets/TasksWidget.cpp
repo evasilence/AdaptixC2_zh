@@ -65,7 +65,7 @@ TasksWidget::TasksWidget( AdaptixWidget* w )
     dockWidgetTable->setIcon(QIcon( ":/icons/job" ), KDDockWidgets::IconPlace::TabBar);
 
     dockWidgetOutput = new KDDockWidgets::QtWidgets::DockWidget( + "Task Output:Dock-" + w->GetProfile()->GetProject(), KDDockWidgets::DockWidgetOption_None, KDDockWidgets::LayoutSaverOption::None);
-    dockWidgetOutput->setTitle("Task Output");
+    dockWidgetOutput->setTitle("任务输出");
     dockWidgetOutput->setWidget(taskOutputConsole);
     dockWidgetOutput->setIcon(QIcon( ":/icons/job" ), KDDockWidgets::IconPlace::TabBar);
 
@@ -118,7 +118,7 @@ void TasksWidget::createUI()
 
     autoSearchCheck = new QCheckBox("auto", searchWidget);
     autoSearchCheck->setChecked(true);
-    autoSearchCheck->setToolTip("Auto search on text change. If unchecked, press Enter to search.");
+    autoSearchCheck->setToolTip("文本改变时自动搜索。如未勾选，按 Enter 键搜索。");
 
     comboAgent = new QComboBox(searchWidget);
     comboAgent->setMinimumWidth(120);
@@ -132,7 +132,7 @@ void TasksWidget::createUI()
 
     comboStatus = new QComboBox(searchWidget);
     comboStatus->setMinimumWidth(100);
-    comboStatus->addItems(QStringList() << "Any status" << "Hosted" << "Running" << "Success" << "Error" << "Canceled");
+    comboStatus->addItems(QStringList() << "任意状态" << "已托管" << "运行中" << "成功" << "错误" << "已取消");
 
     hideButton = new ClickableLabel("  x  ");
     hideButton->setCursor(Qt::PointingHandCursor);
@@ -301,9 +301,9 @@ void TasksWidget::Clear() const
 
     tasksModel->clear();
     comboAgent->clear();
-    comboAgent->addItem("All agents");
+    comboAgent->addItem("所有代理");
     comboType->clear();
-    comboType->addItem("All types");
+    comboType->addItem("所有类型");
     comboStatus->setCurrentIndex(0);
     inputFilter->clear();
 }
@@ -353,10 +353,10 @@ void TasksWidget::handleTasksMenu( const QPoint &pos )
     }
 
     auto ctxMenu = QMenu();
-    ctxMenu.addAction("Copy taskID", this, &TasksWidget::actionCopyTaskId);
-    ctxMenu.addAction("Copy commandLine", this, &TasksWidget::actionCopyCmd);
+    ctxMenu.addAction("复制任务ID", this, &TasksWidget::actionCopyTaskId);
+    ctxMenu.addAction("复制命令行", this, &TasksWidget::actionCopyCmd);
     ctxMenu.addSeparator();
-    ctxMenu.addAction("Agent console", this, &TasksWidget::actionOpenConsole);
+    ctxMenu.addAction("代理控制台", this, &TasksWidget::actionOpenConsole);
     ctxMenu.addSeparator();
 
     int taskCount = adaptixWidget->ScriptManager->AddMenuTask(&ctxMenu, "Tasks", taskIds);
@@ -367,9 +367,9 @@ void TasksWidget::handleTasksMenu( const QPoint &pos )
     ctxMenu.addSeparator();
 
     if (cancel)
-    ctxMenu.addAction("Cancel", this, &TasksWidget::actionCancel);
+    ctxMenu.addAction("取消", this, &TasksWidget::actionCancel);
     if (remove)
-    ctxMenu.addAction("Delete task", this, &TasksWidget::actionDelete);
+    ctxMenu.addAction("删除任务", this, &TasksWidget::actionDelete);
 
     ctxMenu.exec(tableView->viewport()->mapToGlobal(pos));
 }

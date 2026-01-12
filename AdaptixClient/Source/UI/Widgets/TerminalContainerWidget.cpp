@@ -64,10 +64,10 @@ void TerminalTab::createUI()
         programComboBox->addItem("Bash");
         programInput->setText("/bin/zsh");
     }
-    programComboBox->addItem("Custom program");
+    programComboBox->addItem("自定义程序");
 
     keytabLabel = new QLabel(this);
-    keytabLabel->setText("Keytab:");
+    keytabLabel->setText("Keytab：");
 
     keytabComboBox = new QComboBox(this);
     keytabComboBox->addItem("linux_console");
@@ -88,12 +88,12 @@ void TerminalTab::createUI()
     startButton = new QPushButton( QIcon(":/icons/start"), "", this );
     startButton->setIconSize( QSize( 24,24 ));
     startButton->setFixedSize(37, 28);
-    startButton->setToolTip("Start terminal");
+    startButton->setToolTip("启动终端");
 
     stopButton = new QPushButton( QIcon(":/icons/stop"), "", this );
     stopButton->setIconSize( QSize( 24,24 ));
     stopButton->setFixedSize(37, 28);
-    stopButton->setToolTip("Stop terminal");
+    stopButton->setToolTip("停止终端");
     stopButton->setEnabled(false);
 
     line_2 = new QFrame(this);
@@ -104,8 +104,8 @@ void TerminalTab::createUI()
     line_3->setFrameShape(QFrame::VLine);
     line_3->setMinimumHeight(20);
 
-    smartOutputCheckBox = new QCheckBox("Smart Output", this);
-    smartOutputCheckBox->setToolTip("Filter duplicated output in Shell mode");
+    smartOutputCheckBox = new QCheckBox("智能输出", this);
+    smartOutputCheckBox->setToolTip("在 Shell 模式下过滤重复输出");
     smartOutputCheckBox->setVisible(terminalMode == TerminalModeShell);
     connect(smartOutputCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
         smartOutputEnabled = checked;
@@ -121,7 +121,7 @@ void TerminalTab::createUI()
     line_4->setVisible(terminalMode == TerminalModeShell);
 
     statusDescLabel = new QLabel(this);
-    statusDescLabel->setText("status:");
+    statusDescLabel->setText("状态：");
 
     statusLabel = new QLabel(this);
     statusLabel->setText("Stopped");
@@ -167,7 +167,7 @@ void TerminalTab::setStatus(const QString &text)
     this->statusLabel->setText(text);
 
     if (text == "Stopped") {
-        programInput->setEnabled(programComboBox->currentText() == "Custom program");
+        programInput->setEnabled(programComboBox->currentText() == "自定义程序");
         programComboBox->setEnabled(true);
         startButton->setEnabled(true);
         stopButton->setEnabled(false);
@@ -230,15 +230,15 @@ void TerminalTab::handleTerminalMenu(const QPoint &pos)
     menu.addAction("Find  (Ctrl+Shift+F)", this->termWidget, &QTermWidget::toggleShowSearchBar);
     menu.addSeparator();
 
-    QAction *setBufferSizeAction = menu.addAction("Set buffer size...");
+    QAction *setBufferSizeAction = menu.addAction("设置缓冲区大小…");
     connect(setBufferSizeAction, &QAction::triggered, this, [this]() {
         bool ok;
-        int newSize = QInputDialog::getInt(this, "Set buffer size", "Enter maximum number of lines:", termWidget->historySize(), 100, 100000, 100, &ok);
+        int newSize = QInputDialog::getInt(this, "设置缓冲区大小", "输入最大行数：", termWidget->historySize(), 100, 100000, 100, &ok);
         if (ok)
             termWidget->setHistorySize(newSize);
     });
 
-    QAction *saveToTasksAction = menu.addAction("Save to Tasks Manager");
+    QAction *saveToTasksAction = menu.addAction("保存到任务管理器");
     connect(saveToTasksAction, &QAction::triggered, this, [this]() {
         QString text = termWidget->selectedText();
 
@@ -362,7 +362,7 @@ void TerminalTab::onStop()
 void TerminalTab::onProgramChanged()
 {
     QString program = programComboBox->currentText();
-    if (program == "Custom program") {
+    if (program == "自定义程序") {
         programInput->setEnabled(true);
         programInput->clear();
         programInput->setFocus();
@@ -605,7 +605,7 @@ TerminalContainerWidget::TerminalContainerWidget(Agent* a, AdaptixWidget* w, Ter
 
     addTabButton = new QPushButton("+", this);
     addTabButton->setFixedSize(30, 30);
-    addTabButton->setToolTip("Add new terminal");
+    addTabButton->setToolTip("添加新终端");
     tabWidget->setCornerWidget(addTabButton, Qt::BottomLeftCorner);
 
     connect(addTabButton, &QPushButton::clicked,          this, &TerminalContainerWidget::addNewTerminal);
@@ -648,7 +648,7 @@ void TerminalContainerWidget::onTabCloseRequested(int index)
 {
     TerminalTab* tab = qobject_cast<TerminalTab*>(tabWidget->widget(index));
     if (tab && tab->isRunning()) {
-        QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Close Confirmation",
+        QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "关闭确认",
                                           "Terminal is still running. Stop and close it?",
                                           QMessageBox::Yes | QMessageBox::No,
                                           QMessageBox::No);

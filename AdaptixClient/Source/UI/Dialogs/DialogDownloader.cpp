@@ -11,18 +11,18 @@
 
 DialogDownloader::DialogDownloader(const QString &url, const QString &otp, const QString &savedPath, QWidget *parent) : QDialog(parent)
 {
-    this->setWindowTitle("Synchronization...");
+    this->setWindowTitle("同步中…");
     this->resize(400, 150);
     this->setProperty("Main", "base");
 
     progressBar = new QProgressBar(this);
     progressBar->setRange(0, 100);
 
-    statusLabel  = new QLabel("Starting...", this);
-    speedLabel   = new QLabel("Speed: 0 KB/s", this);
-    labelPath    = new QLabel("File saved to:", this);
+    statusLabel  = new QLabel("启动中…", this);
+    speedLabel   = new QLabel("速度：0 KB/s", this);
+    labelPath    = new QLabel("文件保存至：", this);
     lineeditPath = new QLineEdit(savedPath, this);
-    cancelButton = new QPushButton("Cancel", this);
+    cancelButton = new QPushButton("取消", this);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(statusLabel);
@@ -56,30 +56,30 @@ DialogDownloader::DialogDownloader(const QString &url, const QString &otp, const
             recvStr = QString::number(received / 1024.0, 'f', 1) + " KB";
             totalStr = QString::number(total / 1024.0, 'f', 1) + " KB";
         }
-        statusLabel->setText(QString("Downloaded %1 / %2").arg(recvStr).arg(totalStr));
+        statusLabel->setText(QString("已下载：%1 / %2").arg(recvStr).arg(totalStr));
     });
 
     connect(worker, &DownloaderWorker::speedUpdated, this, [this](const double kbps) {
-        speedLabel->setText(QString("Speed: %1 KB/s").arg(kbps, 0, 'f', 2));
+        speedLabel->setText(QString("速度：%1 KB/s").arg(kbps, 0, 'f', 2));
     });
 
     connect(worker, &DownloaderWorker::finished, this, [this]() {
         if (!worker->IsError()) {
             progressBar->setValue(100);
-            statusLabel->setText("Download finished.");
+            statusLabel->setText("下载完成");
 
             speedLabel->setVisible(false);
             labelPath->setVisible(true);
             lineeditPath->setVisible(true);
             lineeditPath->selectAll();
         }
-        cancelButton->setText("Close");
+        cancelButton->setText("关闭");
         disconnect(cancelButton, nullptr, nullptr, nullptr);
         connect(cancelButton, &QPushButton::clicked, this, &QDialog::accept);
     });
 
     connect(worker, &DownloaderWorker::failed, this, [this](const QString &msg) {
-        QMessageBox::critical(this, "Error", msg);
+        QMessageBox::critical(this, "错误", msg);
         this->reject();
     });
 

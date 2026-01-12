@@ -72,14 +72,14 @@ DialogSettings::DialogSettings(Settings* s)
 
 void DialogSettings::createUI()
 {
-    this->setWindowTitle("Adaptix Settings");
+    this->setWindowTitle("Adaptix 设置");
     this->resize(600, 300);
     this->setProperty("Main", "base");
 
     mainSettingWidget = new QWidget(this);
     mainSettingLayout = new QGridLayout(mainSettingWidget);
 
-    themeLabel = new QLabel("Main theme: ", mainSettingWidget);
+    themeLabel = new QLabel("主题：", mainSettingWidget);
     themeCombo = new QComboBox(mainSettingWidget);
     themeCombo->addItem("Dark");
     themeCombo->addItem("Light");
@@ -88,12 +88,12 @@ void DialogSettings::createUI()
     themeCombo->addItem("Dark_Old");
     themeCombo->addItem("Light_Arc");
 
-    fontSizeLabel = new QLabel("Font size: ", mainSettingWidget);
+    fontSizeLabel = new QLabel("字体大小：", mainSettingWidget);
     fontSizeSpin  = new QSpinBox(mainSettingWidget);
     fontSizeSpin->setMinimum(7);
     fontSizeSpin->setMaximum(30);
 
-    fontFamilyLabel = new QLabel("Font family: ", mainSettingWidget);
+    fontFamilyLabel = new QLabel("字体：", mainSettingWidget);
     fontFamilyCombo = new QComboBox(mainSettingWidget);
     fontFamilyCombo->addItem("Adaptix - DejaVu Sans Mono");
     fontFamilyCombo->addItem("Adaptix - Droid Sans Mono");
@@ -102,27 +102,27 @@ void DialogSettings::createUI()
     fontFamilyCombo->addItem("Adaptix - Anonymous Pro");
     fontFamilyCombo->addItem("Adaptix - Space Mono");
 
-    graphLabel1 = new QLabel("Session Graph version:", mainSettingWidget);
+    graphLabel1 = new QLabel("会话图版本：", mainSettingWidget);
     graphCombo1 = new QComboBox(mainSettingWidget);
-    graphCombo1->addItem("Version 1");
-    graphCombo1->addItem("Version 2");
-    graphCombo1->addItem("Version 3");
+    graphCombo1->addItem("版本 1");
+    graphCombo1->addItem("版本 2");
+    graphCombo1->addItem("版本 3");
 
-    terminalSizeLabel = new QLabel("RemoteTerminal buffer (lines):", mainSettingWidget);
+    terminalSizeLabel = new QLabel("远程终端缓冲区（行）：", mainSettingWidget);
     terminalSizeSpin  = new QSpinBox(mainSettingWidget);
     terminalSizeSpin->setMinimum(1);
     terminalSizeSpin->setMaximum(100000);
 
-    consoleGroup  = new QGroupBox("Agent Console", mainSettingWidget);
+    consoleGroup  = new QGroupBox("代理控制台", mainSettingWidget);
 
-    consoleSizeLabel = new QLabel("Buffer size (lines):", consoleGroup);
+    consoleSizeLabel = new QLabel("缓冲区大小（行）：", consoleGroup);
     consoleSizeSpin  = new QSpinBox(consoleGroup);
     consoleSizeSpin->setMinimum(10000);
     consoleSizeSpin->setMaximum(1000000);
 
-    consoleTimeCheckbox       = new QCheckBox("Print date and time", consoleGroup);
-    consoleNoWrapCheckbox     = new QCheckBox("No Wrap mode", consoleGroup);
-    consoleAutoScrollCheckbox = new QCheckBox("Auto Scroll mode", consoleGroup);
+    consoleTimeCheckbox       = new QCheckBox("显示日期和时间", consoleGroup);
+    consoleNoWrapCheckbox     = new QCheckBox("不换行模式", consoleGroup);
+    consoleAutoScrollCheckbox = new QCheckBox("自动滚动模式", consoleGroup);
 
     consoleGroupLayout = new QGridLayout(consoleGroup);
     consoleGroupLayout->addWidget(consoleSizeLabel,          0, 0, 1, 1);
@@ -148,12 +148,12 @@ void DialogSettings::createUI()
 
     sessionsWidget = new QWidget(this);
     sessionsLayout = new QGridLayout(sessionsWidget);
-    sessionsGroup  = new QGroupBox("Columns", sessionsWidget);
+    sessionsGroup  = new QGroupBox("列", sessionsWidget);
 
     QStringList sessionsCheckboxLabels = {
-        "Agent ID", "Agent Type", "External", "Listener", "Internal",
-        "Domain", "Computer", "User", "OS", "Process",
-        "PID", "TID", "Tags", "Created", "Last", "Sleep"
+        "代理ID", "代理类型", "外部地址", "监听器", "内部地址",
+        "域", "计算机", "用户", "操作系统", "进程",
+        "PID", "TID", "标签", "创建时间", "最后响应", "睡眠时间"
     };
 
     for (int i = 0; i < sessionsCheckCount; ++i)
@@ -178,18 +178,18 @@ void DialogSettings::createUI()
     sessionsGroupLayout->addWidget(sessionsCheck[15], 7, 1, 1, 1);
     sessionsGroup->setLayout(sessionsGroupLayout);
 
-    sessionsHealthCheck = new QCheckBox("Check Health", sessionsWidget);
+    sessionsHealthCheck = new QCheckBox("检查健康状态", sessionsWidget);
 
     QSpacerItem* horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
     sessionsLabel1 = new QLabel(sessionsWidget);
-    sessionsLabel1->setText("Sleeptime *");
+    sessionsLabel1->setText("睡眠时间 *");
 
     sessionsLabel2 = new QLabel(sessionsWidget);
     sessionsLabel2->setText("+");
 
     sessionsLabel3 = new QLabel(sessionsWidget);
-    sessionsLabel3->setText("sec");
+    sessionsLabel3->setText("秒");
 
     sessionsCoafSpin = new QDoubleSpinBox(sessionsWidget);
     sessionsCoafSpin->setMinimum(1.0);
@@ -214,12 +214,12 @@ void DialogSettings::createUI()
 
     tasksWidget = new QWidget(this);
     tasksLayout = new QGridLayout(tasksWidget);
-    tasksGroup  = new QGroupBox("Columns", tasksWidget);
+    tasksGroup  = new QGroupBox("列", tasksWidget);
 
     QStringList tasksCheckboxLabels = {
-        "Task ID", "Task Type", "Agent ID", "Client", "User",
-        "Computer", "Start Time", "Finish Time", "Commandline",
-        "Result", "Output"
+        "任务ID", "任务类型", "代理ID", "客户端", "用户",
+        "计算机", "开始时间", "结束时间", "命令行",
+        "结果", "输出"
     };
 
     for (int i = 0; i < 11; ++i)
@@ -243,9 +243,9 @@ void DialogSettings::createUI()
     tasksWidget->setLayout(tasksLayout);
 
     tabblinkWidget = new QWidget(this);
-    tabblinkEnabledCheckbox = new QCheckBox("Enable tab blink", tabblinkWidget);
+    tabblinkEnabledCheckbox = new QCheckBox("启用标签页闪烁", tabblinkWidget);
 
-    tabblinkGroup = new QGroupBox("Blinking tabs", tabblinkWidget);
+    tabblinkGroup = new QGroupBox("闪烁标签页", tabblinkWidget);
     tabblinkGroupLayout = new QGridLayout(tabblinkGroup);
     tabblinkGroupLayout->setContentsMargins(15, 15, 15, 15);
     tabblinkGroupLayout->setHorizontalSpacing(40);
@@ -277,15 +277,15 @@ void DialogSettings::createUI()
     listSettings = new QListWidget(this);
     listSettings->setFixedWidth(150);
     listSettings->setSpacing(3);
-    listSettings->addItem("Main settings");
-    listSettings->addItem("Sessions table");
-    listSettings->addItem("Tasks table");
-    listSettings->addItem("Blinking tabs");
+    listSettings->addItem("主设置");
+    listSettings->addItem("会话表格");
+    listSettings->addItem("任务表格");
+    listSettings->addItem("闪烁标签页");
     listSettings->setCurrentRow(0);
 
     labelHeader = new QLabel(this);
     labelHeader->setStyleSheet("font-size: 16px; font-weight: bold; margin-bottom: 10px;");
-    labelHeader->setText("Main settings");
+    labelHeader->setText("主设置");
 
     lineFrame = new QFrame(this);
     lineFrame->setFrameShape(QFrame::HLine);
@@ -297,10 +297,10 @@ void DialogSettings::createUI()
     headerLayout->setSpacing(0);
 
     hSpacer     = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    buttonClose = new QPushButton("Close", this);
+    buttonClose = new QPushButton("关闭", this);
     buttonClose->setProperty("ButtonStyle", "dialog");
 
-    buttonApply = new QPushButton("Apply ", this);
+    buttonApply = new QPushButton("应用", this);
     buttonApply->setProperty("ButtonStyle", "dialog");
     buttonApply->setEnabled(false);
 

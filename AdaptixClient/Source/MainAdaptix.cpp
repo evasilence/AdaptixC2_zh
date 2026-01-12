@@ -177,7 +177,7 @@ AuthProfile* MainAdaptix::Login()
 
         result = HttpReqLogin( authProfile );
         if (!result)
-            MessageError("Login failure");
+            MessageError("登录失败");
 
     } while( !result );
 

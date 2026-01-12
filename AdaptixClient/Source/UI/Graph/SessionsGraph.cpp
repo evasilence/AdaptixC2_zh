@@ -15,7 +15,7 @@ SessionsGraph::SessionsGraph(QWidget* parent) : QGraphicsView(parent)
     QString project = static_cast<AdaptixWidget *>(parent)->GetProfile()->GetProject();
 
     dockWidget = new KDDockWidgets::QtWidgets::DockWidget("Sessions Graph:Dock-" + project, KDDockWidgets::DockWidgetOption_None, KDDockWidgets::LayoutSaverOption::None);
-    dockWidget->setTitle("Sessions Graph");
+    dockWidget->setTitle("会话图");
     dockWidget->setWidget(this);
     dockWidget->setIcon(QIcon( ":/icons/graph" ), KDDockWidgets::IconPlace::TabBar);
 

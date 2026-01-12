@@ -13,39 +13,39 @@ DialogTarget::~DialogTarget() = default;
 void DialogTarget::createUI()
 {
     this->resize(500, 250);
-    this->setWindowTitle( "Add target" );
+    this->setWindowTitle( "添加目标" );
     this->setProperty("Main", "base");
 
-    computerLabel = new QLabel("Computer:", this);
+    computerLabel = new QLabel("计算机：", this);
     computerInput = new QLineEdit(this);
 
-    domainLabel = new QLabel("Domain:", this);
+    domainLabel = new QLabel("域：", this);
     domainInput = new QLineEdit(this);
 
-    addressLabel = new QLabel("Address:", this);
+    addressLabel = new QLabel("地址：", this);
     addressInput = new QLineEdit(this);
 
-    aliveCheck = new QCheckBox("alive", this);
+    aliveCheck = new QCheckBox("活跃", this);
 
-    osLabel = new QLabel("OS type:", this);
+    osLabel = new QLabel("操作系统类型：", this);
     osCombo = new QComboBox(this);
-    osCombo->addItems(QStringList() << "unknown" << "windows" << "linux" << "macos");
+    osCombo->addItems(QStringList() << "未知" << "windows" << "linux" << "macos");
 
-    osDescLabel = new QLabel("OS description:", this);
+    osDescLabel = new QLabel("操作系统描述：", this);
     osDescInput = new QLineEdit(this);
 
-    tagLabel  = new QLabel("Tag:", this);
+    tagLabel  = new QLabel("标签：", this);
     tagInput  = new QLineEdit(this);
 
-    infoLabel  = new QLabel("Info:", this);
+    infoLabel  = new QLabel("信息：", this);
     infoInput = new QLineEdit(this);
 
     spacer_1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     spacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-    createButton = new QPushButton("Save", this);
+    createButton = new QPushButton("保存", this);
     createButton->setProperty("ButtonStyle", "dialog");
-    cancelButton = new QPushButton("Cancel", this);
+    cancelButton = new QPushButton("取消", this);
     cancelButton->setProperty("ButtonStyle", "dialog");
 
     hLayoutBottom = new QHBoxLayout();
@@ -91,7 +91,7 @@ void DialogTarget::StartDialog()
 
 void DialogTarget::SetEditmode(const TargetData &targetData)
 {
-    this->setWindowTitle( "Edit target" );
+    this->setWindowTitle( "编辑目标" );
     this->targetId = targetData.TargetId;
 
     computerInput->setText(targetData.Computer);

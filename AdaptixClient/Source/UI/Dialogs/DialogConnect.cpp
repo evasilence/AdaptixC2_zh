@@ -71,24 +71,24 @@ void DialogConnect::createUI()
 {
     resize(720, 420);
     setFixedSize(720, 420);
-    setWindowTitle("Connect");
+    setWindowTitle("连接");
     setProperty("Main", "base");
 
-    groupUserInfo = new QGroupBox("User Info", this);
+    groupUserInfo = new QGroupBox("用户信息", this);
     auto userLayout = new QGridLayout(groupUserInfo);
     userLayout->setContentsMargins(10, 10, 10, 10);
     userLayout->setHorizontalSpacing(12);
     userLayout->setVerticalSpacing(8);
 
-    label_User = new QLabel("User:", this);
-    label_Password = new QLabel("Password:", this);
+    label_User = new QLabel("用户名:", this);
+    label_Password = new QLabel("密码:", this);
 
     lineEdit_User = new QLineEdit(this);
-    lineEdit_User->setToolTip("Enter your username");
+    lineEdit_User->setToolTip("输入用户名");
 
     lineEdit_Password = new QLineEdit(this);
     lineEdit_Password->setEchoMode(QLineEdit::Password);
-    lineEdit_Password->setToolTip("Enter your password");
+    lineEdit_Password->setToolTip("输入密码");
 
     userLayout->addWidget(label_User,        0, 0);
     userLayout->addWidget(lineEdit_User,     0, 1);
@@ -96,36 +96,36 @@ void DialogConnect::createUI()
     userLayout->addWidget(lineEdit_Password, 1, 1);
     userLayout->setColumnMinimumWidth(0, 100);
 
-    groupServerDetails = new QGroupBox("Server Details", this);
+    groupServerDetails = new QGroupBox("服务器详情", this);
     auto serverLayout = new QGridLayout(groupServerDetails);
     serverLayout->setContentsMargins(10, 10, 10, 10);
     serverLayout->setHorizontalSpacing(12);
     serverLayout->setVerticalSpacing(8);
 
-    label_Url = new QLabel("URL:", this);
+    label_Url = new QLabel("地址:", this);
 
     lineEdit_Url = new QLineEdit(this);
     lineEdit_Url->setPlaceholderText("https://address:4321/endpoint");
-    lineEdit_Url->setToolTip("Enter full server URL (e.g., https://host:port/endpoint)");
+    lineEdit_Url->setToolTip("输入服务器地址 (例如: https://host:port/endpoint)");
 
     serverLayout->addWidget(label_Url,     0, 0);
     serverLayout->addWidget(lineEdit_Url,  0, 1);
     serverLayout->setColumnMinimumWidth(0, 100);
 
-    groupProject = new QGroupBox("Project", this);
+    groupProject = new QGroupBox("项目", this);
     auto projectLayout = new QGridLayout(groupProject);
     projectLayout->setContentsMargins(10, 10, 10, 10);
     projectLayout->setHorizontalSpacing(12);
     projectLayout->setVerticalSpacing(8);
 
-    label_Project = new QLabel("Name:", this);
-    label_ProjectDir = new QLabel("Directory:", this);
+    label_Project = new QLabel("名称:", this);
+    label_ProjectDir = new QLabel("目录:", this);
 
     lineEdit_Project = new QLineEdit(this);
-    lineEdit_Project->setToolTip("Enter project name");
+    lineEdit_Project->setToolTip("输入项目名称");
 
     lineEdit_ProjectDir = new QLineEdit(this);
-    lineEdit_ProjectDir->setToolTip("Enter path to project directory (auto-generated if empty)");
+    lineEdit_ProjectDir->setToolTip("输入项目目录路径（留空则自动生成）");
 
     projectLayout->addWidget(label_Project,      0, 0);
     projectLayout->addWidget(lineEdit_Project,   0, 1);
@@ -135,7 +135,7 @@ void DialogConnect::createUI()
 
     buttonConnect = new QPushButton(this);
     buttonConnect->setProperty("ButtonStyle", "dialog_apply");
-    buttonConnect->setText("Connect");
+    buttonConnect->setText("连接");
     buttonConnect->setFixedWidth(160);
     buttonConnect->setFocus();
 
@@ -157,11 +157,11 @@ void DialogConnect::createUI()
     formWidget->setLayout(formLayout);
 
     menuContext = new QMenu(this);
-    menuContext->addAction("Remove", this, &DialogConnect::itemRemove);
+    menuContext->addAction("删除", this, &DialogConnect::itemRemove);
 
     label_Profiles = new QLabel(this);
     label_Profiles->setAlignment(Qt::AlignCenter);
-    label_Profiles->setText("Profiles");
+    label_Profiles->setText("配置文件");
 
     cardWidget = new CardListWidget(this);
     cardWidget->setFixedWidth(240);
@@ -172,20 +172,20 @@ void DialogConnect::createUI()
 
     buttonNewProfile = new QPushButton(this);
     buttonNewProfile->setProperty("ButtonStyle", "dialog");
-    buttonNewProfile->setText("New Profile");
+    buttonNewProfile->setText("新建配置");
     buttonNewProfile->setMinimumSize(QSize(10, 30));
 
     buttonLoad = new QPushButton(QIcon(":/icons/file_open"), "", this);
     buttonLoad->setProperty("ButtonStyle", "dialog");
     buttonLoad->setIconSize(QSize(20, 20));
     buttonLoad->setFixedSize(QSize(30, 30));
-    buttonLoad->setToolTip("Load profile from file");
+    buttonLoad->setToolTip("从文件加载配置");
 
     buttonSave = new QPushButton(QIcon(":/icons/save_as"), "", this);
     buttonSave->setProperty("ButtonStyle", "dialog");
     buttonSave->setIconSize(QSize(20, 20));
     buttonSave->setFixedSize(QSize(30, 30));
-    buttonSave->setToolTip("Save profile to file");
+    buttonSave->setToolTip("保存配置到文件");
 
     auto profileButtonsLayout = new QHBoxLayout();
     profileButtonsLayout->addWidget(buttonNewProfile);
@@ -305,19 +305,19 @@ bool DialogConnect::checkValidInput() const
         return true;
     };
 
-    if (!checkEmpty(lineEdit_Project, "Project is empty")) return false;
-    if (!checkEmpty(lineEdit_Url, "URL is empty")) return false;
-    if (!checkEmpty(lineEdit_User, "Username is empty")) return false;
-    if (!checkEmpty(lineEdit_Password, "Password is empty")) return false;
+    if (!checkEmpty(lineEdit_Project, "项目名不能为空")) return false;
+    if (!checkEmpty(lineEdit_Url, "地址不能为空")) return false;
+    if (!checkEmpty(lineEdit_User, "用户名不能为空")) return false;
+    if (!checkEmpty(lineEdit_Password, "密码不能为空")) return false;
 
     QString host, port, endpoint;
     if (!parseUrl(host, port, endpoint)) {
-        MessageError("Invalid URL format (Example: https://host:port/endpoint)");
+        MessageError("地址格式错误（示例: https://host:port/endpoint）");
         return false;
     }
 
     if (GlobalClient->storage->ExistsProject(lineEdit_Project->text()) && isNewProject) {
-        MessageError("Project already exists");
+        MessageError("项目已存在");
         return false;
     }
 
@@ -360,7 +360,7 @@ void DialogConnect::onSelectProjectDir()
     if (current.isEmpty())
         current = defaultProjectDir(lineEdit_Project->text());
 
-    QString dir = QFileDialog::getExistingDirectory(this, "Select project directory", current);
+    QString dir = QFileDialog::getExistingDirectory(this, "选择项目目录", current);
     if (!dir.isEmpty()) {
         lineEdit_ProjectDir->setText(dir);
         projectDirTouched = true;
@@ -383,14 +383,14 @@ void DialogConnect::onButton_Load()
     if (!projectDir.isEmpty() && QDir(projectDir).exists())
         baseDir = projectDir;
 
-    NonBlockingDialogs::getOpenFileName(this, "Load Profile", baseDir, "Adaptix Profile files (*.adaptixProfile)",
+    NonBlockingDialogs::getOpenFileName(this, "加载配置", baseDir, "Adaptix 配置文件 (*.adaptixProfile)",
         [this](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
 
             QFile file(filePath);
             if (!file.open(QIODevice::ReadOnly)) {
-                MessageError("Failed to open file for reading");
+                MessageError("打开文件失败");
                 return;
             }
 
@@ -399,7 +399,7 @@ void DialogConnect::onButton_Load()
             file.close();
 
             if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
-                MessageError("Error JSON parse");
+                MessageError("JSON 解析错误");
                 return;
             }
 
@@ -407,7 +407,7 @@ void DialogConnect::onButton_Load()
             const QStringList requiredFields = {"project", "host", "port", "endpoint", "username", "password"};
             for (const QString& field : requiredFields) {
                 if (!json.contains(field) || !json[field].isString()) {
-                    MessageError(QString("Required parameter '%1' is missing").arg(field));
+                    MessageError(QString("缺少必需参数 '%1'").arg(field));
                     return;
                 }
             }
@@ -478,19 +478,19 @@ void DialogConnect::onButton_Save()
 
     QString initialPath = QDir(baseDir).filePath(projectName + ".adaptixProfile");
 
-    NonBlockingDialogs::getSaveFileName(this, "Save Profile", initialPath, "Adaptix Profile files (*.adaptixProfile)",
+    NonBlockingDialogs::getSaveFileName(this, "保存配置", initialPath, "Adaptix 配置文件 (*.adaptixProfile)",
         [json](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
 
             QFile file(filePath);
             if (!file.open(QIODevice::WriteOnly)) {
-                MessageError("Failed to open file for writing");
+                MessageError("打开文件失败");
                 return;
             }
 
             file.write(QJsonDocument(json).toJson(QJsonDocument::Indented));
             file.close();
-            MessageSuccess("Profile saved successfully");
+            MessageSuccess("配置保存成功");
         });
 }

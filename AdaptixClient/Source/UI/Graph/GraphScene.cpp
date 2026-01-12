@@ -80,8 +80,8 @@ void GraphScene::contextMenuEvent( QGraphicsSceneContextMenuEvent *event )
 
 
     auto agentMenu = QMenu("Agent");
-    agentMenu.addAction("Execute command");
-    agentMenu.addAction("Task manager");
+    agentMenu.addAction("执行命令");
+    agentMenu.addAction("任务管理器");
     agentMenu.addSeparator();
 
     int agentCount = adaptixWidget->ScriptManager->AddMenuSession(&agentMenu, "SessionAgent", agentIds);
@@ -96,9 +96,9 @@ void GraphScene::contextMenuEvent( QGraphicsSceneContextMenuEvent *event )
     sessionMenu.addAction("Mark as Active");
     sessionMenu.addAction("Mark as Inactive");
     sessionMenu.addSeparator();
-    sessionMenu.addAction("Set tag");
+    sessionMenu.addAction("设置标签");
     if (agentIds.size() == 1 )
-        sessionMenu.addAction("Set data");
+        sessionMenu.addAction("设置数据");
 
     auto ctxMenu = QMenu();
     ctxMenu.addAction("Console");
@@ -129,9 +129,9 @@ void GraphScene::contextMenuEvent( QGraphicsSceneContextMenuEvent *event )
             adaptixWidget->LoadConsoleUI(agentId);
         }
     }
-    else if ( action->text() == "Execute command") {
+    else if ( action->text() == "执行命令") {
         bool ok = false;
-        QString cmd = QInputDialog::getText(nullptr,"Execute Command", "Command", QLineEdit::Normal, "", &ok);
+        QString cmd = QInputDialog::getText(nullptr,"执行命令", "命令", QLineEdit::Normal, "", &ok);
         if (!ok)
             return;
 
@@ -141,14 +141,14 @@ void GraphScene::contextMenuEvent( QGraphicsSceneContextMenuEvent *event )
             item->agent->Console->processInput();
         }
     }
-    else if ( action->text() == "Task manager") {
+    else if ( action->text() == "任务管理器") {
         for (QString agentId : agentIds) {
             adaptixWidget->TasksDock->SetAgentFilter(agentId);
             adaptixWidget->SetTasksUI();
         }
     }
     else if ( action->text() == "Remove console data" ) {
-        QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Clear Confirmation",
+        QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "清除确认",
                                           "Are you sure you want to delete all agent console data and history from server (tasks will not be deleted from TaskManager)?\n\n"
                                           "If you want to temporarily hide the contents of the agent console, do so through the agent console menu.",
                                           QMessageBox::Yes | QMessageBox::No,
@@ -161,11 +161,11 @@ void GraphScene::contextMenuEvent( QGraphicsSceneContextMenuEvent *event )
 
         HttpReqConsoleRemoveAsync(agentIds, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
     else if ( action->text() == "Remove from server" ) {
-        QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "Delete Confirmation",
+        QMessageBox::StandardButton reply = QMessageBox::question(nullptr, "删除确认",
                                           "Are you sure you want to delete all information about the selected agents from the server?\n\n"
                                           "If you want to hide the record, simply choose: 'Item -> Hide on Client'.",
                                           QMessageBox::Yes | QMessageBox::No,
@@ -175,33 +175,33 @@ void GraphScene::contextMenuEvent( QGraphicsSceneContextMenuEvent *event )
 
         HttpReqAgentRemoveAsync(agentIds, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
     else if ( action->text() == "Mark as Active" ) {
         HttpReqAgentSetMarkAsync(agentIds, "", *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
     else if ( action->text() == "Mark as Inactive" ) {
         HttpReqAgentSetMarkAsync(agentIds, "Inactive", *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
             if (!success)
-                MessageError(message.isEmpty() ? "Response timeout" : message);
+                MessageError(message.isEmpty() ? "响应超时" : message);
         });
     }
-    else if ( action->text() == "Set tag" ) {
+    else if ( action->text() == "设置标签" ) {
         QString tag = "";
         bool inputOk;
-        QString newTag = QInputDialog::getText(nullptr, "Set tags", "New tag", QLineEdit::Normal,tag, &inputOk);
+        QString newTag = QInputDialog::getText(nullptr, "设置标签", "新标签", QLineEdit::Normal,tag, &inputOk);
         if ( inputOk ) {
             HttpReqAgentSetTagAsync(agentIds, newTag, *(adaptixWidget->GetProfile()), [](bool success, const QString& message, const QJsonObject&) {
                 if (!success)
-                    MessageError(message.isEmpty() ? "Response timeout" : message);
+                    MessageError(message.isEmpty() ? "响应超时" : message);
             });
         }
     }
-    else if ( action->text() == "Set data" ) {
+    else if ( action->text() == "设置数据" ) {
         if (agentIds.isEmpty())
             return;
 

@@ -46,7 +46,7 @@ void LogsWidget::createUI()
 
     searchLabel    = new QLabel("0 of 0");
     searchLineEdit = new QLineEdit();
-    searchLineEdit->setPlaceholderText("Find");
+    searchLineEdit->setPlaceholderText("查找");
     searchLineEdit->setMaximumWidth(300);
 
     hideButton = new ClickableLabel("X");

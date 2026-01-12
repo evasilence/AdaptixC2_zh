@@ -21,7 +21,7 @@ DialogExtender::~DialogExtender()  = default;
 
 void DialogExtender::createUI()
 {
-    this->setWindowTitle("AxScript manager");
+    this->setWindowTitle("AxScript 管理器");
     this->resize(1200, 700);
     this->setProperty("Main", "base");
 
@@ -90,16 +90,16 @@ void DialogExtender::AddExtenderItem(const ExtensionFile &extenderItem) const
     item_Status->setFlags( item_Status->flags() ^ Qt::ItemIsEditable );
     item_Status->setTextAlignment( Qt::AlignCenter );
     if ( extenderItem.Enabled ) {
-        item_Status->setText("Enable");
+        item_Status->setText("已启用");
         item_Status->setForeground(QColor(COLOR_NeonGreen));
     }
     else {
         if (extenderItem.Message.isEmpty()) {
-            item_Status->setText("Disable");
+            item_Status->setText("已禁用");
             item_Status->setForeground(QColor(COLOR_BrightOrange));
         }
         else {
-            item_Status->setText("Failed");
+            item_Status->setText("失败");
             item_Status->setForeground(QColor(COLOR_ChiliPepper));
         }
     }
@@ -130,16 +130,16 @@ void DialogExtender::UpdateExtenderItem(const ExtensionFile &extenderItem) const
             tableWidget->item(row, 3)->setText(extenderItem.Description);
 
             if ( extenderItem.Enabled ) {
-                tableWidget->item(row, 2)->setText("Enable");
+                tableWidget->item(row, 2)->setText("已启用");
                 tableWidget->item(row, 2)->setForeground(QColor(COLOR_NeonGreen));
             }
             else {
                 if (extenderItem.Message.isEmpty()) {
-                    tableWidget->item(row, 2)->setText("Disable");
+                    tableWidget->item(row, 2)->setText("已禁用");
                     tableWidget->item(row, 2)->setForeground(QColor(COLOR_BrightOrange));
                 }
                 else {
-                    tableWidget->item(row, 2)->setText("Failed");
+                    tableWidget->item(row, 2)->setText("失败");
                     tableWidget->item(row, 2)->setForeground(QColor(COLOR_ChiliPepper));
                 }
             }
@@ -165,7 +165,7 @@ void DialogExtender::handleMenu(const QPoint &pos ) const
 {
     QMenu menu = QMenu();
 
-    menu.addAction("Load new", this, &DialogExtender::onActionLoad );
+    menu.addAction("加载新脚本", this, &DialogExtender::onActionLoad );
     menu.addAction("Reload",   this, &DialogExtender::onActionReload );
     menu.addSeparator();
     menu.addAction("Enable",  this, &DialogExtender::onActionEnable );
@@ -185,7 +185,7 @@ void DialogExtender::onActionLoad() const
             baseDir = profile->GetProjectDir();
     }
 
-    NonBlockingDialogs::getOpenFileName(const_cast<DialogExtender*>(this), "Load Script", baseDir, "AxScript Files (*.axs)",
+    NonBlockingDialogs::getOpenFileName(const_cast<DialogExtender*>(this), "加载脚本", baseDir, "AxScript 文件 (*.axs)",
         [this](const QString& filePath) {
             if (filePath.isEmpty())
                 return;
