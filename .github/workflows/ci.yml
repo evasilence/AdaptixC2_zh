@@ -161,13 +161,19 @@ jobs:
       - name: Display downloaded files
         run: ls -R artifacts
 
+      - name: Rename Artifacts
+        run: |
+          mv artifacts/AdaptixClient-Linux/AdaptixClient artifacts/AdaptixClient-Linux/AdaptixClient-Linux
+          mv artifacts/AdaptixClient-Windows/AdaptixClient.exe artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
+          mv artifacts/AdaptixClient-macOS/AdaptixClient artifacts/AdaptixClient-macOS/AdaptixClient-macOS
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             artifacts/AdaptixServer-All/*
-            artifacts/AdaptixClient-Linux/AdaptixClient
-            artifacts/AdaptixClient-macOS/AdaptixClient*
-            artifacts/AdaptixClient-Windows/AdaptixClient.exe
+            artifacts/AdaptixClient-Linux/AdaptixClient-Linux
+            artifacts/AdaptixClient-macOS/AdaptixClient-macOS
+            artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
           draft: false
           prerelease: false
