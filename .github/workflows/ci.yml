@@ -82,8 +82,15 @@ jobs:
 
   # --- macOS Client Build Job ---
   build-client-macos:
-    name: Build Client (macOS)
-    runs-on: macos-14
+    name: Build Client (macOS ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-13
+            arch: x64
+          - os: macos-14
+            arch: arm64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -109,7 +116,7 @@ jobs:
       - name: Upload Client (macOS)
         uses: actions/upload-artifact@v4
         with:
-          name: AdaptixClient-macOS
+          name: AdaptixClient-macOS-${{ matrix.arch }}
           path: build/AdaptixClient*
 
   # --- Windows Client Build Job ---
@@ -165,7 +172,8 @@ jobs:
         run: |
           mv artifacts/AdaptixClient-Linux/AdaptixClient artifacts/AdaptixClient-Linux/AdaptixClient-Linux
           mv artifacts/AdaptixClient-Windows/AdaptixClient.exe artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
-          mv artifacts/AdaptixClient-macOS/AdaptixClient artifacts/AdaptixClient-macOS/AdaptixClient-macOS
+          mv artifacts/AdaptixClient-macOS-x64/AdaptixClient artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64
+          mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -173,7 +181,8 @@ jobs:
           files: |
             artifacts/AdaptixServer-All/*
             artifacts/AdaptixClient-Linux/AdaptixClient-Linux
-            artifacts/AdaptixClient-macOS/AdaptixClient-macOS
+            artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64
+            artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64
             artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
           draft: false
           prerelease: false
