@@ -45,6 +45,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install qt@6 cmake openssl
+        echo "CMAKE_PREFIX_PATH=$(brew --prefix qt@6)" >> $GITHUB_ENV
 
     - name: Build C++ Client
       run: make client
