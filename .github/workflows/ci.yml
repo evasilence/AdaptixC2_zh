@@ -41,7 +41,7 @@ jobs:
         uses: jurplel/install-qt-action@v3
         with:
           version: '6.7.0'
-          modules: 'qtwebsockets qtdeclarative qt5compat'
+          modules: 'qtwebsockets qt5compat'
           
       - name: Configure CMake
         run: cmake -B build -S AdaptixClient -G Ninja -DCMAKE_BUILD_TYPE=Release
