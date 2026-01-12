@@ -65,12 +65,12 @@ func (tc *TsConnector) tcLogin(ctx *gin.Context) {
 func (tc *TsConnector) tcConnect(ctx *gin.Context) {
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 	username, ok := value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
@@ -79,7 +79,7 @@ func (tc *TsConnector) tcConnect(ctx *gin.Context) {
 
 	exists = tc.teamserver.TsClientExists(username)
 	if exists {
-		ctx.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusNetworkAuthenticationRequired, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
@@ -117,35 +117,35 @@ func (tc *TsConnector) tcWebsocketConnect(username string, version string, wsCon
 func (tc *TsConnector) tcSync(ctx *gin.Context) {
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 	username, ok := value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
 	go tc.teamserver.TsClientSync(username)
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "sync started", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, "sync started"))
 }
 
 func (tc *TsConnector) tcChannel(ctx *gin.Context) {
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 	username, ok := value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
 	exists = tc.teamserver.TsClientExists(username)
 	if !exists {
-		ctx.JSON(http.StatusNetworkAuthenticationRequired, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusNetworkAuthenticationRequired, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 

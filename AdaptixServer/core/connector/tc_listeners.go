@@ -11,7 +11,7 @@ import (
 func (tc *TsConnector) TcListenerList(ctx *gin.Context) {
 	jsonListeners, err := tc.teamserver.TsListenerList()
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
@@ -33,17 +33,17 @@ func (tc *TsConnector) TcListenerStart(ctx *gin.Context) {
 	}
 
 	if isvalid.ValidListenerName(listener.ListenerName) == false {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Invalid listener name", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Invalid listener name"))
 		return
 	}
 
 	err = tc.teamserver.TsListenerStart(listener.ListenerName, listener.ConfigType, listener.Config, 0, "", nil)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Listener started", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, "Listener started"))
 }
 
 func (tc *TsConnector) TcListenerStop(ctx *gin.Context) {
@@ -56,11 +56,11 @@ func (tc *TsConnector) TcListenerStop(ctx *gin.Context) {
 
 	err = tc.teamserver.TsListenerStop(listener.ListenerName, listener.ConfigType)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Listener stopped", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, "Listener stopped"))
 }
 
 func (tc *TsConnector) TcListenerEdit(ctx *gin.Context) {
@@ -73,9 +73,9 @@ func (tc *TsConnector) TcListenerEdit(ctx *gin.Context) {
 
 	err = tc.teamserver.TsListenerEdit(listener.ListenerName, listener.ConfigType, listener.Config)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Listener Edited", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, "Listener Edited"))
 }

@@ -9,7 +9,7 @@ import (
 func (tc *TsConnector) TcCredentialsList(ctx *gin.Context) {
 	jsonCreds, err := tc.teamserver.TsCredentilsList()
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
@@ -31,12 +31,12 @@ func (tc *TsConnector) TcCredentialsAdd(ctx *gin.Context) {
 	var creds []map[string]interface{}
 
 	if err := ctx.ShouldBindJSON(&m); err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 	arr, ok := m["creds"].([]interface{})
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON structure", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON structure"))
 		return
 	}
 	for _, v := range arr {
@@ -47,11 +47,11 @@ func (tc *TsConnector) TcCredentialsAdd(ctx *gin.Context) {
 
 	err := tc.teamserver.TsCredentilsAdd(creds)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type CredsEdit struct {
@@ -69,17 +69,17 @@ func (tc *TsConnector) TcCredentialsEdit(ctx *gin.Context) {
 	var credsEdit CredsEdit
 	err := ctx.ShouldBindJSON(&credsEdit)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	err = tc.teamserver.TsCredentilsEdit(credsEdit.CredId, credsEdit.Username, credsEdit.Password, credsEdit.Realm, credsEdit.Type, credsEdit.Tag, credsEdit.Storage, credsEdit.Host)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type CredsTag struct {
@@ -95,13 +95,13 @@ func (tc *TsConnector) TcCredentialsSetTag(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&credsTag)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	err = tc.teamserver.TsCredentialsSetTag(credsTag.CredIdArray, credsTag.Tag)
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type CredsRemove struct {
@@ -112,15 +112,15 @@ func (tc *TsConnector) TcCredentialsRemove(ctx *gin.Context) {
 	var credsRemove CredsRemove
 	err := ctx.ShouldBindJSON(&credsRemove)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	err = tc.teamserver.TsCredentilsDelete(credsRemove.CredsId)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }

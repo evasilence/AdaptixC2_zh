@@ -14,7 +14,7 @@ import (
 func (tc *TsConnector) TcAgentList(ctx *gin.Context) {
 	jsonAgents, err := tc.teamserver.TsAgentList()
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
@@ -46,19 +46,19 @@ func (tc *TsConnector) TcAgentGenerate(ctx *gin.Context) {
 
 	listenerWM, listenerProfile, err = tc.teamserver.TsListenerGetProfile(agentConfig.ListenerName, agentConfig.ListenerType)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
 	fileContent, fileName, err = tc.teamserver.TsAgentGenerate(agentConfig.AgentName, agentConfig.Config, listenerWM, listenerProfile)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
 	encodedContent := base64.StdEncoding.EncodeToString([]byte(fileName)) + ":" + base64.StdEncoding.EncodeToString(fileContent)
 
-	ctx.JSON(http.StatusOK, gin.H{"message": encodedContent, "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, encodedContent))
 }
 
 type CommandData struct {
@@ -82,19 +82,19 @@ func (tc *TsConnector) TcAgentCommandExecute(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&commandData)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 
 	username, ok = value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
@@ -105,11 +105,11 @@ func (tc *TsConnector) TcAgentCommandExecute(ctx *gin.Context) {
 
 	err = tc.teamserver.TsAgentCommand(commandData.AgentName, commandData.AgentId, username, commandData.HookId, commandData.HandlerId, commandData.CmdLine, commandData.UI, args)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type CommandData2 struct {
@@ -128,31 +128,31 @@ func (tc *TsConnector) TcAgentCommandFile(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&commandData2)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 
 	username, ok = value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
 	content, err := tc.teamserver.TsUploadGetFileContent(commandData2.ObjectId)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
 	err = json.Unmarshal(content, &commandData)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
@@ -163,11 +163,11 @@ func (tc *TsConnector) TcAgentCommandFile(ctx *gin.Context) {
 
 	err = tc.teamserver.TsAgentCommand(commandData.AgentName, commandData.AgentId, username, commandData.HookId, commandData.HandlerId, commandData.CmdLine, commandData.UI, args)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type AgentRemove struct {
@@ -182,7 +182,7 @@ func (tc *TsConnector) TcAgentConsoleRemove(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentRemove)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -200,11 +200,11 @@ func (tc *TsConnector) TcAgentConsoleRemove(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 func (tc *TsConnector) TcAgentRemove(ctx *gin.Context) {
@@ -215,7 +215,7 @@ func (tc *TsConnector) TcAgentRemove(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentRemove)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -235,11 +235,11 @@ func (tc *TsConnector) TcAgentRemove(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type AgentTag struct {
@@ -255,7 +255,7 @@ func (tc *TsConnector) TcAgentSetTag(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentTag)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -276,11 +276,11 @@ func (tc *TsConnector) TcAgentSetTag(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type AgentMark struct {
@@ -296,7 +296,7 @@ func (tc *TsConnector) TcAgentSetMark(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentMark)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -317,11 +317,11 @@ func (tc *TsConnector) TcAgentSetMark(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type AgentColor struct {
@@ -339,7 +339,7 @@ func (tc *TsConnector) TcAgentSetColor(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentColor)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -365,11 +365,11 @@ func (tc *TsConnector) TcAgentSetColor(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type AgentUpdateData struct {
@@ -403,20 +403,20 @@ func (tc *TsConnector) TcAgentUpdateData(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentUpdateData)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	if agentUpdateData.AgentId == "" {
-		ctx.JSON(http.StatusOK, gin.H{"message": "agent_id is required", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "agent_id is required"))
 		return
 	}
 
 	err = tc.teamserver.TsAgentUpdateDataPartial(agentUpdateData.AgentId, agentUpdateData)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }

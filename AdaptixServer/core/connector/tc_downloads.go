@@ -12,7 +12,7 @@ import (
 func (tc *TsConnector) TcDownloadList(ctx *gin.Context) {
 	jsonDownloads, err := tc.teamserver.TsDownloadList()
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
@@ -38,7 +38,8 @@ func (tc *TsConnector) TcGuiDownloadSync(ctx *gin.Context) {
 
 	filename, content, err := tc.teamserver.TsDownloadSync(downloadFid.File)
 	if err != nil {
-		answer = gin.H{"message": err.Error(), "ok": false}
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
+		return
 	} else {
 		encodedContent := base64.StdEncoding.EncodeToString(content)
 		filename = strings.Split(filename, "_")[1]
@@ -57,15 +58,15 @@ func (tc *TsConnector) TcGuiDownloadDelete(ctx *gin.Context) {
 	var downloadsDelete DownloadsDelete
 	err := ctx.ShouldBindJSON(&downloadsDelete)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	err = tc.teamserver.TsDownloadDelete(downloadsDelete.FilesId)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }

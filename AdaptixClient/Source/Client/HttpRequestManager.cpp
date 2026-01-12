@@ -175,7 +175,9 @@ void HttpRequestManager::processResponse(QNetworkReply* reply)
                 success = true;
             }
 
-            if (jsonResponse.contains("message")) {
+            if (jsonResponse.contains("message_zh") && jsonResponse["message_zh"].isString()) {
+                message = jsonResponse["message_zh"].toString();
+            } else if (jsonResponse.contains("message") && jsonResponse["message"].isString()) {
                 message = jsonResponse["message"].toString();
             }
         } else {

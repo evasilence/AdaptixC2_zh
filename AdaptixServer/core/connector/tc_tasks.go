@@ -22,7 +22,7 @@ func (tc *TsConnector) TcAgentTaskCancel(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentTasks)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -40,11 +40,11 @@ func (tc *TsConnector) TcAgentTaskCancel(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 func (tc *TsConnector) TcAgentTaskDelete(ctx *gin.Context) {
@@ -55,7 +55,7 @@ func (tc *TsConnector) TcAgentTaskDelete(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&agentTasks)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -73,11 +73,11 @@ func (tc *TsConnector) TcAgentTaskDelete(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type AgentTaskHook struct {
@@ -101,19 +101,19 @@ func (tc *TsConnector) TcAgentTaskHook(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&tasksHook)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 
 	username, ok = value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
@@ -130,11 +130,11 @@ func (tc *TsConnector) TcAgentTaskHook(ctx *gin.Context) {
 
 	err = tc.teamserver.TsTaskPostHook(hookData, tasksHook.JobIndex)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type TaskSave struct {
@@ -155,19 +155,19 @@ func (tc *TsConnector) TcAgentTaskSave(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&taskSave)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
 	value, exists := ctx.Get("username")
 	if !exists {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: username not found in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: username not found in context"))
 		return
 	}
 
 	username, ok = value.(string)
 	if !ok {
-		ctx.JSON(http.StatusOK, gin.H{"message": "Server error: invalid username type in context", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "Server error: invalid username type in context"))
 		return
 	}
 
@@ -182,17 +182,17 @@ func (tc *TsConnector) TcAgentTaskSave(ctx *gin.Context) {
 
 	err = tc.teamserver.TsTaskSave(taskData)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 func (tc *TsConnector) TcAgentTaskList(ctx *gin.Context) {
 	agentId := ctx.Query("agent_id")
 	if agentId == "" {
-		ctx.JSON(http.StatusOK, gin.H{"message": "agent_id is required", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "agent_id is required"))
 		return
 	}
 
@@ -202,11 +202,11 @@ func (tc *TsConnector) TcAgentTaskList(ctx *gin.Context) {
 	if raw := ctx.Query("limit"); raw != "" {
 		value, err := strconv.Atoi(raw)
 		if err != nil {
-			ctx.JSON(http.StatusOK, gin.H{"message": "limit must be an integer", "ok": false})
+			ctx.JSON(http.StatusOK, payload(false, "limit must be an integer"))
 			return
 		}
 		if value < 0 {
-			ctx.JSON(http.StatusOK, gin.H{"message": "limit must be >= 0", "ok": false})
+			ctx.JSON(http.StatusOK, payload(false, "limit must be >= 0"))
 			return
 		}
 		if value > 1000 {
@@ -218,11 +218,11 @@ func (tc *TsConnector) TcAgentTaskList(ctx *gin.Context) {
 	if raw := ctx.Query("offset"); raw != "" {
 		value, err := strconv.Atoi(raw)
 		if err != nil {
-			ctx.JSON(http.StatusOK, gin.H{"message": "offset must be an integer", "ok": false})
+			ctx.JSON(http.StatusOK, payload(false, "offset must be an integer"))
 			return
 		}
 		if value < 0 {
-			ctx.JSON(http.StatusOK, gin.H{"message": "offset must be >= 0", "ok": false})
+			ctx.JSON(http.StatusOK, payload(false, "offset must be >= 0"))
 			return
 		}
 		offset = value
@@ -230,7 +230,7 @@ func (tc *TsConnector) TcAgentTaskList(ctx *gin.Context) {
 
 	jsonTasks, err := tc.teamserver.TsTaskListCompleted(agentId, limit, offset)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 

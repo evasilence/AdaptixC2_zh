@@ -10,7 +10,7 @@ import (
 func (tc *TsConnector) TcScreenshotList(ctx *gin.Context) {
 	jsonScreen, err := tc.teamserver.TsScreenshotList()
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": err.Error(), "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, err.Error()))
 		return
 	}
 
@@ -25,7 +25,7 @@ func (tc *TsConnector) TcScreenshotRemove(ctx *gin.Context) {
 	var screenRemove ScreenRemove
 	err := ctx.ShouldBindJSON(&screenRemove)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -43,11 +43,11 @@ func (tc *TsConnector) TcScreenshotRemove(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
 
 type ScreenNote struct {
@@ -63,7 +63,7 @@ func (tc *TsConnector) TcScreenshotSetNote(ctx *gin.Context) {
 
 	err = ctx.ShouldBindJSON(&screenNote)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{"message": "invalid JSON data", "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, "invalid JSON data"))
 		return
 	}
 
@@ -81,9 +81,9 @@ func (tc *TsConnector) TcScreenshotSetNote(ctx *gin.Context) {
 			message += fmt.Sprintf("%d. %s\n", i+1, errorMessage)
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{"message": message, "ok": false})
+		ctx.JSON(http.StatusOK, payload(false, message))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "", "ok": true})
+	ctx.JSON(http.StatusOK, payload(true, ""))
 }
