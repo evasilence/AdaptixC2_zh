@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+  workflow_dispatch:
+
+jobs:
+  build-server:
+    name: Build Server
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24' # Using latest stable available in context
+          check-latest: true
+          
+      - name: Build Server
+        working-directory: AdaptixServer
+        run: go build -v ./...
+
+  build-client-linux:
+    name: Build Client (Linux)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build libgl1-mesa-dev libxkbcommon-dev libvulkan-dev
+          
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+          modules: 'qtwebsockets qtdeclarative qt5compat'
+          
+      - name: Configure CMake
+        run: cmake -B build -S AdaptixClient -G Ninja -DCMAKE_BUILD_TYPE=Release
+        
+      - name: Build Client
+        run: cmake --build build
