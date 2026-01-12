@@ -17,12 +17,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24' # Using latest stable available in context
+          go-version: '1.24'
           check-latest: true
+          cache-dependency-path: AdaptixServer/go.sum
           
       - name: Build Server
         working-directory: AdaptixServer
-        run: go build -v ./...
+        run: go build -o AdaptixServer -v .
+
+      - name: Upload Server Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdaptixServer-Linux
+          path: AdaptixServer/AdaptixServer
 
   build-client-linux:
     name: Build Client (Linux)
@@ -48,3 +55,9 @@ jobs:
         
       - name: Build Client
         run: cmake --build build
+
+      - name: Upload Client Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdaptixClient-Linux
+          path: build/AdaptixClient
