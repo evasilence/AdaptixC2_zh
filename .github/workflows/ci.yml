@@ -74,6 +74,16 @@ jobs:
         run: |
           cmake --build build
           DESTDIR=AppDir cmake --install build
+          
+      - name: Cleanup Unused Qt Plugins
+        run: |
+           # Linuxdeploy tries to bundle everything, but Mimer/ODBC often have missing system deps.
+           # Remove them to prevent linuxdeploy failure.
+           if [ -d "$Qt6_DIR/plugins/sqldrivers" ]; then
+             rm -f "$Qt6_DIR/plugins/sqldrivers/libqsqlmimer.so"
+             rm -f "$Qt6_DIR/plugins/sqldrivers/libqsqlodbc.so"
+             rm -f "$Qt6_DIR/plugins/sqldrivers/libqsqlpsql.so"
+           fi
         
       - name: Create AppImage
         run: |
@@ -212,8 +222,11 @@ jobs:
           echo RunningProcess="AdaptixClient.exe" >> config.txt
           echo ;!@InstallEnd@! >> config.txt
           
-          :: Combine to create Single Executable (Search for sfx module)
-          for /r extra %%f in (7zSD.sfx) do copy /b "%%f" + config.txt + app.7z AdaptixClient-Windows.exe
+          :: Find 7zSD.sfx and copy to current dir
+          for /f "delims=" %%a in ('dir /b /s extra\7zSD.sfx') do copy "%%a" .
+          
+          :: Combine to create Single Executable
+          copy /b 7zSD.sfx + config.txt + app.7z AdaptixClient-Windows.exe
         
       - name: Upload Client (Windows)
         uses: actions/upload-artifact@v4
