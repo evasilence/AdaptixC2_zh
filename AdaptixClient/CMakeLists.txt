@@ -165,7 +165,7 @@ SET( HEADERS
         Headers/UI/Widgets/DockWidgetRegister.h
 )
 
-add_executable(AdaptixClient
+add_executable(AdaptixClient MACOSX_BUNDLE
         ${KONSOLE_SOURCES}
         ${KONSOLE_HEADERS}
 

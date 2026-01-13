@@ -114,11 +114,14 @@ jobs:
       - name: Build
         run: cmake --build build
       
+      - name: Deploy Qt (Mac)
+        run: macdeployqt build/AdaptixClient.app -dmg -verbose=1
+
       - name: Upload Client (macOS)
         uses: actions/upload-artifact@v4
         with:
           name: AdaptixClient-macOS-${{ matrix.arch }}
-          path: build/AdaptixClient*
+          path: build/AdaptixClient.dmg
 
   # --- Windows Client Build Job ---
   build-client-windows:
@@ -173,8 +176,8 @@ jobs:
         run: |
           mv artifacts/AdaptixClient-Linux/AdaptixClient artifacts/AdaptixClient-Linux/AdaptixClient-Linux
           mv artifacts/AdaptixClient-Windows/AdaptixClient.exe artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
-          mv artifacts/AdaptixClient-macOS-x64/AdaptixClient artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64
-          mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64
+          mv artifacts/AdaptixClient-macOS-x64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
+          mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -182,8 +185,8 @@ jobs:
           files: |
             artifacts/AdaptixServer-All/*
             artifacts/AdaptixClient-Linux/AdaptixClient-Linux
-            artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64
-            artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64
+            artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
+            artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
             artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
           draft: false
           prerelease: false
