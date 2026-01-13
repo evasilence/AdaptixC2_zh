@@ -59,7 +59,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build libgl1-mesa-dev libxkbcommon-dev libvulkan-dev
+          sudo apt-get install -y build-essential cmake ninja-build libgl1-mesa-dev libxkbcommon-dev libvulkan-dev libfuse2 file wget
           
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -68,16 +68,50 @@ jobs:
           modules: 'qtwebsockets qt5compat'
           
       - name: Configure CMake
-        run: cmake -B build -S AdaptixClient -G Ninja -DCMAKE_BUILD_TYPE=Release
+        run: cmake -B build -S AdaptixClient -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
         
       - name: Build
-        run: cmake --build build
+        run: |
+          cmake --build build
+          DESTDIR=AppDir cmake --install build
         
+      - name: Create AppImage
+        run: |
+          # Get linuxdeploy
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage
+          
+          # Get Qt plugin
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
+          
+          # Prepare Icon and Desktop file if missing (Assuming simple setup)
+          # AdaptixClient needs an icon and desktop file for AppImage ideally
+          # But linuxdeploy might complain if they are missing.
+          # For now, we rely on CMake install providing the desktop integration or creating dummy ones.
+          
+          # Just in case, create a simple desktop entry if source doesn't have it
+          mkdir -p AppDir/usr/share/applications/
+          echo "[Desktop Entry]
+          Type=Application
+          Name=AdaptixClient
+          Exec=AdaptixClient
+          Icon=AdaptixClient
+          Categories=Utility;" > AppDir/usr/share/applications/AdaptixClient.desktop
+          
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
+          # Create a dummy icon or use one if exists? We'll create a dummy empty file or reuse simple icon if not present to avoid failure?
+          # Actually, let's just touch one
+          touch AppDir/usr/share/icons/hicolor/256x256/apps/AdaptixClient.png
+          
+          # Generate AppImage
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
+          
       - name: Upload Client (Linux)
         uses: actions/upload-artifact@v4
         with:
           name: AdaptixClient-Linux
-          path: build/AdaptixClient
+          path: AdaptixClient-*.AppImage
 
   # --- macOS Client Build Job ---
   build-client-macos:
@@ -157,15 +191,32 @@ jobs:
           copy build\AdaptixClient.exe dist\
           windeployqt --release --compiler-runtime --dir dist dist\AdaptixClient.exe
 
-      - name: Archive Windows Client
+      - name: Package SFX (Windows)
+        shell: cmd
         run: |
-          Compress-Archive -Path dist\* -DestinationPath AdaptixClient-Windows.zip
+          :: Create 7z archive of the dist folder
+          7z a app.7z .\dist\*
+          
+          :: Download 7-Zip Extra to get 7zSD.sfx (The SFX module)
+          curl -L -o 7z_extra.7z https://www.7-zip.org/a/7z2301-extra.7z
+          7z e 7z_extra.7z -oextra 7zSD.sfx -r
+          
+          :: Create Config for SFX
+          echo ;!@Install@!UTF-8! > config.txt
+          echo Title="AdaptixClient" >> config.txt
+          echo ExecuteFile="AdaptixClient.exe" >> config.txt
+          echo ExecuteParameters="" >> config.txt
+          echo RunningProcess="AdaptixClient.exe" >> config.txt
+          echo ;!@InstallEnd@! >> config.txt
+          
+          :: Combine to create Single Executable
+          copy /b extra\7zSD.sfx + config.txt + app.7z AdaptixClient-Windows.exe
         
       - name: Upload Client (Windows)
         uses: actions/upload-artifact@v4
         with:
           name: AdaptixClient-Windows
-          path: AdaptixClient-Windows.zip
+          path: AdaptixClient-Windows.exe
           
   # --- Release Job (Only on Tag) ---
   create-release:
@@ -184,7 +235,7 @@ jobs:
 
       - name: Rename Artifacts
         run: |
-          mv artifacts/AdaptixClient-Linux/AdaptixClient artifacts/AdaptixClient-Linux/AdaptixClient-Linux
+          mv artifacts/AdaptixClient-Linux/AdaptixClient-*.AppImage artifacts/AdaptixClient-Linux/AdaptixClient-Linux.AppImage.AppImage
           mv artifacts/AdaptixClient-macOS-x64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
           mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
 
@@ -193,9 +244,9 @@ jobs:
         with:
           files: |
             artifacts/AdaptixServer-All/*
-            artifacts/AdaptixClient-Linux/AdaptixClient-Linux
+            artifacts/AdaptixClient-Linux/AdaptixClient-Linux.AppImage
             artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
             artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
-            artifacts/AdaptixClient-Windows/AdaptixClient-Windows.zip
+            artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
           draft: false
           prerelease: false
