@@ -210,9 +210,9 @@ jobs:
           :: Create 7z archive of the dist folder
           7z a app.7z .\dist\*
           
-          :: Download 7-Zip Extra to get 7zSD.sfx (The SFX module)
-          curl -L -o 7z_extra.7z https://www.7-zip.org/a/7z2301-extra.7z
-          7z x 7z_extra.7z -oextra
+          :: Download LZMA SDK to get 7zSD.sfx (The SFX module)
+          curl -L -o lzma_sdk.7z https://www.7-zip.org/a/lzma2301.7z
+          7z x lzma_sdk.7z -oextra
           
           :: Create Config for SFX
           echo ;!@Install@!UTF-8! > config.txt
@@ -222,11 +222,8 @@ jobs:
           echo RunningProcess="AdaptixClient.exe" >> config.txt
           echo ;!@InstallEnd@! >> config.txt
           
-          :: Find 7zSD.sfx and copy to current dir
-          for /f "delims=" %%a in ('dir /b /s extra\7zSD.sfx') do copy "%%a" .
-          
           :: Combine to create Single Executable
-          copy /b 7zSD.sfx + config.txt + app.7z AdaptixClient-Windows.exe
+          copy /b extra\bin\7zSD.sfx + config.txt + app.7z AdaptixClient-Windows.exe
         
       - name: Upload Client (Windows)
         uses: actions/upload-artifact@v4
