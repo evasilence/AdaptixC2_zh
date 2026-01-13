@@ -235,7 +235,7 @@ jobs:
 
       - name: Rename Artifacts
         run: |
-          mv artifacts/AdaptixClient-Linux/AdaptixClient-*.AppImage artifacts/AdaptixClient-Linux/AdaptixClient-Linux.AppImage.AppImage
+          mv artifacts/AdaptixClient-Linux/AdaptixClient-*.AppImage artifacts/AdaptixClient-Linux/AdaptixClient-Linux.AppImage
           mv artifacts/AdaptixClient-macOS-x64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
           mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
 
