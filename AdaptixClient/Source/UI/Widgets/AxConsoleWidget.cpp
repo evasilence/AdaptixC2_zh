@@ -9,9 +9,9 @@
 #include <Client/AuthProfile.h>
 #include <Client/AxScript/AxScriptManager.h>
 
-REGISTER_DOCK_WIDGET(AxConsoleWidget, "Extension Console", false)
+REGISTER_DOCK_WIDGET(AxConsoleWidget, "扩展控制台", false)
 
-AxConsoleWidget::AxConsoleWidget(AxScriptManager* m, AdaptixWidget* w) : DockTab("AxScript Console", w->GetProfile()->GetProject(), ":/icons/code_blocks"), adaptixWidget(w), scriptManager(m)
+AxConsoleWidget::AxConsoleWidget(AxScriptManager* m, AdaptixWidget* w) : DockTab("扩展控制台", w->GetProfile()->GetProject(), ":/icons/code_blocks"), adaptixWidget(w), scriptManager(m)
 {
     this->createUI();
 

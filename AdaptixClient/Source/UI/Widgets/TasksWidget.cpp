@@ -204,20 +204,20 @@ void TasksWidget::AddTaskItem(TaskData newTask) const
     if ( adaptixWidget->TasksMap.contains(newTask.TaskId) )
         return;
 
-    newTask.Status = "Hosted";
+    newTask.Status = "已托管";
     if (newTask.Completed) {
         if ( newTask.MessageType == CONSOLE_OUT_ERROR || newTask.MessageType == CONSOLE_OUT_LOCAL_ERROR ) {
-            newTask.Status = "Error";
+            newTask.Status = "错误";
         }
         else if ( newTask.MessageType == CONSOLE_OUT_INFO || newTask.MessageType == CONSOLE_OUT_LOCAL_INFO ) {
-            newTask.Status = "Canceled";
+            newTask.Status = "已取消";
         }
         else {
-            newTask.Status = "Success";
+            newTask.Status = "成功";
         }
     }
     else if (newTask.TaskType == 4) {
-        newTask.Status = "Running";
+        newTask.Status = "运行中";
     }
     adaptixWidget->TasksMap[newTask.TaskId] = newTask;
 

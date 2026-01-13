@@ -25,7 +25,7 @@ DialogSyncPacket::DialogSyncPacket(QObject* parent) : QObject(parent)
 
     progressBar = new QProgressBar();
 
-    cancelButton = new QPushButton("Cancel");
+    cancelButton = new QPushButton("取消");
     cancelButton->setFixedWidth(100);
     connect(cancelButton, &QPushButton::clicked, this, &DialogSyncPacket::onCancel);
 
@@ -56,14 +56,14 @@ void DialogSyncPacket::init(int count)
     receivedLogs = 0;
     totalLogs = count;
     startTime = QDateTime::currentMSecsSinceEpoch();
-    QString progress = QString("Received: %1 / %2").arg(receivedLogs).arg(totalLogs);
+    QString progress = QString("已接收: %1 / %2").arg(receivedLogs).arg(totalLogs);
     logProgressLabel->setText(progress);
     logProgressLabel->setAlignment(Qt::AlignCenter);
 
     progressBar->setRange(0, totalLogs);
     progressBar->setValue(receivedLogs);
     cancelButton->setEnabled(true);
-    cancelButton->setText("Cancel");
+    cancelButton->setText("取消");
 }
 
 void DialogSyncPacket::upgrade()
@@ -71,7 +71,7 @@ void DialogSyncPacket::upgrade()
     if (cancelled)
         return;
 
-    QString progress = QString("Received: %1 / %2").arg(receivedLogs).arg(totalLogs);
+    QString progress = QString("已接收: %1 / %2").arg(receivedLogs).arg(totalLogs);
     logProgressLabel->setText(progress);
 
     if (totalLogs > 0) {
@@ -96,7 +96,7 @@ void DialogSyncPacket::finish()
         .arg(seconds, 0, 'f', 2);
 
     logProgressLabel->setText(completeMsg);
-    cancelButton->setText("Close");
+    cancelButton->setText("关闭");
     cancelButton->setEnabled(true);
     disconnect(cancelButton, &QPushButton::clicked, this, &DialogSyncPacket::onCancel);
     connect(cancelButton, &QPushButton::clicked, splashScreen, &QWidget::close);
@@ -122,7 +122,7 @@ void DialogSyncPacket::onCancel()
         return;
 
     cancelled = true;
-    logProgressLabel->setText("Cancelling...");
+    logProgressLabel->setText("正在取消...");
     cancelButton->setEnabled(false);
     Q_EMIT syncCancelled();
 }

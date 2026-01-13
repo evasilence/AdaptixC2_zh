@@ -16,9 +16,9 @@
 #include <Client/AuthProfile.h>
 #include <MainAdaptix.h>
 
-REGISTER_DOCK_WIDGET(SessionsTableWidget, "Sessions", true)
+REGISTER_DOCK_WIDGET(SessionsTableWidget, "会话表", true)
 
-SessionsTableWidget::SessionsTableWidget( AdaptixWidget* w ) : DockTab("Sessions table", w->GetProfile()->GetProject(), ":/icons/format_list")
+SessionsTableWidget::SessionsTableWidget( AdaptixWidget* w ) : DockTab("会话表", w->GetProfile()->GetProject(), ":/icons/format_list")
 {
     this->adaptixWidget = w;
 

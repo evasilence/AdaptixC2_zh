@@ -17,9 +17,9 @@ static QString extractFileName(const QString& filePath)
     return pathParts.isEmpty() ? fileName : pathParts.last();
 }
 
-REGISTER_DOCK_WIDGET(DownloadsWidget, "Downloads", true)
+REGISTER_DOCK_WIDGET(DownloadsWidget, "下载", true)
 
-DownloadsWidget::DownloadsWidget(AdaptixWidget* w) : DockTab("Downloads", w->GetProfile()->GetProject(), ":/icons/downloads"), adaptixWidget(w)
+DownloadsWidget::DownloadsWidget(AdaptixWidget* w) : DockTab("下载", w->GetProfile()->GetProject(), ":/icons/downloads"), adaptixWidget(w)
 {
     this->createUI();
 
@@ -53,10 +53,10 @@ void DownloadsWidget::createUI()
     searchWidget->setVisible(false);
 
     inputFilter = new QLineEdit(searchWidget);
-    inputFilter->setPlaceholderText("filter: (exe | dll) & ^(temp)");
+    inputFilter->setPlaceholderText("过滤: (exe | dll) & ^(temp)");
     inputFilter->setMaximumWidth(300);
 
-    autoSearchCheck = new QCheckBox("auto", searchWidget);
+    autoSearchCheck = new QCheckBox("自动", searchWidget);
     autoSearchCheck->setChecked(true);
     autoSearchCheck->setToolTip("文本改变时自动搜索。如果不选中，按 Enter 键搜索。");
 

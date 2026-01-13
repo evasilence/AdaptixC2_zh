@@ -6,7 +6,7 @@
 #include <Utils/CustomElements.h>
 #include <Utils/NonBlockingDialogs.h>
 
-REGISTER_DOCK_WIDGET(ScreenshotsWidget, "Screenshots", true)
+REGISTER_DOCK_WIDGET(ScreenshotsWidget, "截图", true)
 
 ImageFrame::ImageFrame(QWidget* parent) : QWidget(parent), label(new QLabel), scrollArea(new QScrollArea(this)), ctrlPressed(false), scaleFactor(1.0)
 {
@@ -92,7 +92,7 @@ void ImageFrame::clear()
 
 
 
-ScreenshotsWidget::ScreenshotsWidget(AdaptixWidget* w) : DockTab("Screenshots", w->GetProfile()->GetProject(), ":/icons/picture"), adaptixWidget(w)
+ScreenshotsWidget::ScreenshotsWidget(AdaptixWidget* w) : DockTab("截图", w->GetProfile()->GetProject(), ":/icons/picture"), adaptixWidget(w)
 {
     this->createUI();
 

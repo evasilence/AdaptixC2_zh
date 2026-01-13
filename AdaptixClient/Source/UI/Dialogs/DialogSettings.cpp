@@ -81,12 +81,12 @@ void DialogSettings::createUI()
 
     themeLabel = new QLabel("主题：", mainSettingWidget);
     themeCombo = new QComboBox(mainSettingWidget);
-    themeCombo->addItem("Dark");
-    themeCombo->addItem("Light");
-    themeCombo->addItem("Dracula");
-    themeCombo->addItem("Fallout");
-    themeCombo->addItem("Dark_Old");
-    themeCombo->addItem("Light_Arc");
+    themeCombo->addItem("暗色 (Dark)", "Dark");
+    themeCombo->addItem("亮色 (Light)", "Light");
+    themeCombo->addItem("德古拉 (Dracula)", "Dracula");
+    themeCombo->addItem("辐射 (Fallout)", "Fallout");
+    themeCombo->addItem("暗色 (旧版)", "Dark_Old");
+    themeCombo->addItem("亮色 (Arc)", "Light_Arc");
 
     fontSizeLabel = new QLabel("字体大小：", mainSettingWidget);
     fontSizeSpin  = new QSpinBox(mainSettingWidget);
@@ -359,8 +359,8 @@ void DialogSettings::onApply() const
 {
     buttonApply->setEnabled(false);
 
-    if(settings->data.MainTheme != themeCombo->currentText()) {
-        settings->data.MainTheme = themeCombo->currentText();
+    if(settings->data.MainTheme != themeCombo->currentData().toString()) {
+        settings->data.MainTheme = themeCombo->currentData().toString();
 
         QString appTheme = ":/themes/" + settings->data.MainTheme;
         bool result = false;
@@ -435,7 +435,10 @@ void DialogSettings::onClose()
 
 void DialogSettings::loadSettings()
 {
-    themeCombo->setCurrentText(settings->data.MainTheme);
+    int themeIndex = themeCombo->findData(settings->data.MainTheme);
+    if (themeIndex != -1)
+        themeCombo->setCurrentIndex(themeIndex);
+
     fontFamilyCombo->setCurrentText(settings->data.FontFamily);
     fontSizeSpin->setValue(settings->data.FontSize);
     graphCombo1->setCurrentText(settings->data.GraphVersion);

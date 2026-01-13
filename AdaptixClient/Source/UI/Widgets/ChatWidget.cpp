@@ -5,9 +5,9 @@
 #include <Client/AuthProfile.h>
 #include <Client/Requestor.h>
 
-REGISTER_DOCK_WIDGET(ChatWidget, "Chat", true)
+REGISTER_DOCK_WIDGET(ChatWidget, "聊天", true)
 
-ChatWidget::ChatWidget(AdaptixWidget* w) : DockTab("Chat", w->GetProfile()->GetProject(), ":/icons/chat"), adaptixWidget(w)
+ChatWidget::ChatWidget(AdaptixWidget* w) : DockTab("聊天", w->GetProfile()->GetProject(), ":/icons/chat"), adaptixWidget(w)
 {
     this->createUI();
 

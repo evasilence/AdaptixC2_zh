@@ -8,7 +8,7 @@
 #include <Client/AuthProfile.h>
 #include <Client/AxScript/AxScriptManager.h>
 
-REGISTER_DOCK_WIDGET(BrowserFilesWidget, "Browser Files", false)
+REGISTER_DOCK_WIDGET(BrowserFilesWidget, "文件浏览器", false)
 
 void BrowserFileData::CreateBrowserFileData(const QString &path, const int os)
 {
@@ -49,7 +49,7 @@ void BrowserFileData::SetStored(const bool stored)
 
 
 
-BrowserFilesWidget::BrowserFilesWidget(AdaptixWidget* w, Agent* a) : DockTab(QString("Files [%1]").arg( a->data.Id ), w->GetProfile()->GetProject())
+BrowserFilesWidget::BrowserFilesWidget(AdaptixWidget* w, Agent* a) : DockTab(QString("文件 [%1]").arg( a->data.Id ), w->GetProfile()->GetProject())
 {
     agent = a;
     this->createUI();

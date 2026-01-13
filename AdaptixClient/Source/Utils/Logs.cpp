@@ -33,7 +33,7 @@ void LogError(const char* format, ...)
 void MessageError(const QString &message )
 {
     auto box = QMessageBox();
-    box.setWindowTitle( "Error" );
+    box.setWindowTitle( "错误" );
     box.setText( message );
     box.setIcon( QMessageBox::Critical );
     box.exec();
@@ -42,7 +42,7 @@ void MessageError(const QString &message )
 void MessageSuccess(const QString &message )
 {
     auto box = QMessageBox();
-    box.setWindowTitle( "Success" );
+    box.setWindowTitle( "成功" );
     box.setText( message );
     box.setIcon( QMessageBox::Information );
     box.exec();

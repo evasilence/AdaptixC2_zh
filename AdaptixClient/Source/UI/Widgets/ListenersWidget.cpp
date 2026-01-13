@@ -8,9 +8,9 @@
 #include <Client/AxScript/AxElementWrappers.h>
 #include <Client/AxScript/AxScriptManager.h>
 
-REGISTER_DOCK_WIDGET(ListenersWidget, "Listeners", true)
+REGISTER_DOCK_WIDGET(ListenersWidget, "监听器", true)
 
-ListenersWidget::ListenersWidget(AdaptixWidget* w) : DockTab("Listeners", w->GetProfile()->GetProject(), ":/icons/listeners"), adaptixWidget(w)
+ListenersWidget::ListenersWidget(AdaptixWidget* w) : DockTab("监听器", w->GetProfile()->GetProject(), ":/icons/listeners"), adaptixWidget(w)
 {
     this->createUI();
 

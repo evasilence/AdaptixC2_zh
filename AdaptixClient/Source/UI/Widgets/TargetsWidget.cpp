@@ -8,9 +8,9 @@
 #include <Utils/CustomElements.h>
 #include <Utils/NonBlockingDialogs.h>
 
-REGISTER_DOCK_WIDGET(TargetsWidget, "Targets", true)
+REGISTER_DOCK_WIDGET(TargetsWidget, "目标表", true)
 
-TargetsWidget::TargetsWidget(AdaptixWidget* w) : DockTab("Targets", w->GetProfile()->GetProject(), ":/icons/devices"), adaptixWidget(w)
+TargetsWidget::TargetsWidget( AdaptixWidget* w ) : DockTab("目标表", w->GetProfile()->GetProject(), ":/icons/devices")
 {
     this->createUI();
 

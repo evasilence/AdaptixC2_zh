@@ -10,7 +10,7 @@
 #include <Client/Requestor.h>
 #include <MainAdaptix.h>
 
-REGISTER_DOCK_WIDGET(TerminalContainerWidget, "Remote Terminal", false)
+REGISTER_DOCK_WIDGET(TerminalContainerWidget, "远程终端", false)
 
 TerminalTab::TerminalTab(Agent* a, AdaptixWidget* w, TerminalMode mode, QWidget* parent) : QWidget(parent)
 {
@@ -588,7 +588,7 @@ bool TerminalTab::isRunning() const { return terminalWorker != nullptr; }
 
 
 
-TerminalContainerWidget::TerminalContainerWidget(Agent* a, AdaptixWidget* w, TerminalMode mode) : DockTab(QString("%1 [%2]").arg(mode == TerminalModeShell ? "Shell" : "Terminal").arg(a->data.Id), w->GetProfile()->GetProject())
+TerminalContainerWidget::TerminalContainerWidget(Agent* a, AdaptixWidget* w, TerminalMode mode) : DockTab(QString("%1 [%2]").arg(mode == TerminalModeShell ? "Shell" : "终端").arg(a->data.Id), w->GetProfile()->GetProject())
 {
     this->agent = a;
     this->adaptixWidget = w;

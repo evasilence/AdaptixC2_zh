@@ -6,9 +6,9 @@
 #include <Client/AuthProfile.h>
 #include <Client/AxScript/AxScriptManager.h>
 
-REGISTER_DOCK_WIDGET(BrowserProcessWidget, "Browser Process", false)
+REGISTER_DOCK_WIDGET(BrowserProcessWidget, "进程浏览器", false)
 
-BrowserProcessWidget::BrowserProcessWidget(AdaptixWidget* w, Agent* a) : DockTab(QString("Processes [%1]").arg(a->data.Id), w->GetProfile()->GetProject())
+BrowserProcessWidget::BrowserProcessWidget(AdaptixWidget* w, Agent* a) : DockTab(QString("进程 [%1]").arg( a->data.Id ), w->GetProfile()->GetProject())
 {
     agent = a;
     this->createUI();

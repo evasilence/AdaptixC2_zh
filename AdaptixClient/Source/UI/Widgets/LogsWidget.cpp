@@ -4,9 +4,9 @@
 #include <Client/AuthProfile.h>
 #include <Utils/Convert.h>
 
-REGISTER_DOCK_WIDGET(LogsWidget, "Logs", true)
+REGISTER_DOCK_WIDGET(LogsWidget, "日志", true)
 
-LogsWidget::LogsWidget(AdaptixWidget* w) : DockTab("Logs", w->GetProfile()->GetProject(), ":/icons/logs")
+LogsWidget::LogsWidget(AdaptixWidget* w) : DockTab("日志", w->GetProfile()->GetProject(), ":/icons/logs"), adaptixWidget(w)
 {
     this->createUI();
 

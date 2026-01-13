@@ -7,9 +7,9 @@
 #include <Agent/Agent.h>
 #include <UI/Graph/GraphItem.h>
 
-REGISTER_DOCK_WIDGET(TunnelsWidget, "Tunnels", true)
+REGISTER_DOCK_WIDGET(TunnelsWidget, "隧道", true)
 
-TunnelsWidget::TunnelsWidget(AdaptixWidget* w) : DockTab("Tunnels", w->GetProfile()->GetProject(), ":/icons/vpn")
+TunnelsWidget::TunnelsWidget(AdaptixWidget* w) : DockTab("隧道", w->GetProfile()->GetProject(), ":/icons/vpn")
 {
     this->adaptixWidget = w;
 

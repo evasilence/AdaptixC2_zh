@@ -9,9 +9,9 @@
 #include <Utils/FontManager.h>
 #include <MainAdaptix.h>
 
-REGISTER_DOCK_WIDGET(ConsoleWidget, "Agent Console", true)
+REGISTER_DOCK_WIDGET(ConsoleWidget, "Agent 控制台", true)
 
-ConsoleWidget::ConsoleWidget( AdaptixWidget* w, Agent* a, Commander* c) : DockTab(QString("Console [%1]").arg( a->data.Id ), w->GetProfile()->GetProject())
+ConsoleWidget::ConsoleWidget( AdaptixWidget* w, Agent* a, Commander* c) : DockTab(QString("控制台 [%1]").arg( a->data.Id ), w->GetProfile()->GetProject())
 {
     adaptixWidget = w;
     agent         = a;

@@ -8,9 +8,9 @@
 #include <Utils/CustomElements.h>
 #include <Utils/NonBlockingDialogs.h>
 
-REGISTER_DOCK_WIDGET(CredentialsWidget, "Credentials", true)
+REGISTER_DOCK_WIDGET(CredentialsWidget, "凭据", true)
 
-CredentialsWidget::CredentialsWidget(AdaptixWidget* w) : DockTab("Credentials", w->GetProfile()->GetProject(), ":/icons/key"), adaptixWidget(w)
+CredentialsWidget::CredentialsWidget(AdaptixWidget* w) : DockTab("凭据", w->GetProfile()->GetProject(), ":/icons/key"), adaptixWidget(w)
 {
     this->createUI();
 

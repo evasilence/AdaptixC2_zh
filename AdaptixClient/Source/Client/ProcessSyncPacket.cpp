@@ -581,11 +581,11 @@ void AdaptixWidget::processSyncPacket(QJsonObject jsonObj)
                 task->FinishTime = jsonObj["a_finish_time"].toDouble();
                 task->MessageType = jsonObj["a_msg_type"].toDouble();
                 if (task->MessageType == CONSOLE_OUT_ERROR || task->MessageType == CONSOLE_OUT_LOCAL_ERROR)
-                    task->Status = "Error";
+                    task->Status = "错误";
                 else if (task->MessageType == CONSOLE_OUT_INFO || task->MessageType == CONSOLE_OUT_LOCAL_INFO)
-                    task->Status = "Canceled";
+                    task->Status = "已取消";
                 else
-                    task->Status = "Success";
+                    task->Status = "成功";
             }
             if (task->Message.isEmpty())
                 task->Message = jsonObj["a_message"].toString();
