@@ -149,12 +149,23 @@ jobs:
         
       - name: Build
         run: cmake --build build
+      
+      - name: Deploy Qt (Windows)
+        shell: cmd
+        run: |
+          mkdir dist
+          copy build\AdaptixClient.exe dist\
+          windeployqt --release --compiler-runtime --dir dist dist\AdaptixClient.exe
+
+      - name: Archive Windows Client
+        run: |
+          Compress-Archive -Path dist\* -DestinationPath AdaptixClient-Windows.zip
         
       - name: Upload Client (Windows)
         uses: actions/upload-artifact@v4
         with:
           name: AdaptixClient-Windows
-          path: build/AdaptixClient.exe
+          path: AdaptixClient-Windows.zip
           
   # --- Release Job (Only on Tag) ---
   create-release:
@@ -174,7 +185,6 @@ jobs:
       - name: Rename Artifacts
         run: |
           mv artifacts/AdaptixClient-Linux/AdaptixClient artifacts/AdaptixClient-Linux/AdaptixClient-Linux
-          mv artifacts/AdaptixClient-Windows/AdaptixClient.exe artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
           mv artifacts/AdaptixClient-macOS-x64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
           mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
 
@@ -186,6 +196,6 @@ jobs:
             artifacts/AdaptixClient-Linux/AdaptixClient-Linux
             artifacts/AdaptixClient-macOS-x64/AdaptixClient-macOS-x64.dmg
             artifacts/AdaptixClient-macOS-arm64/AdaptixClient-macOS-arm64.dmg
-            artifacts/AdaptixClient-Windows/AdaptixClient-Windows.exe
+            artifacts/AdaptixClient-Windows/AdaptixClient-Windows.zip
           draft: false
           prerelease: false
