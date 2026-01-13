@@ -86,10 +86,7 @@ jobs:
           chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
           
           # Prepare Icon and Desktop file if missing (Assuming simple setup)
-          # AdaptixClient needs an icon and desktop file for AppImage ideally
-          # But linuxdeploy might complain if they are missing.
-          # For now, we rely on CMake install providing the desktop integration or creating dummy ones.
-          
+            
           # Just in case, create a simple desktop entry if source doesn't have it
           mkdir -p AppDir/usr/share/applications/
           echo "[Desktop Entry]
@@ -99,13 +96,19 @@ jobs:
           Icon=AdaptixClient
           Categories=Utility;" > AppDir/usr/share/applications/AdaptixClient.desktop
           
-          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
-          # Create a dummy icon or use one if exists? We'll create a dummy empty file or reuse simple icon if not present to avoid failure?
-          # Actually, let's just touch one
-          touch AppDir/usr/share/icons/hicolor/256x256/apps/AdaptixClient.png
-          
           # Generate AppImage
+          # We don't need to manually create the icon if CMake install put it there. 
+          # But to be safe if cmake skipped it (due to path issues), we copy it from source.
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
+          if [ -f AdaptixClient/Resources/icons/os/linux/AdaptixClient.png ]; then
+            cp AdaptixClient/Resources/icons/os/linux/AdaptixClient.png AppDir/usr/share/icons/hicolor/256x256/apps/AdaptixClient.png
+          else
+            # Only create dummy if real one missing to avoid error, but try to use real one
+             touch AppDir/usr/share/icons/hicolor/256x256/apps/AdaptixClient.png
+          fi
+          
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
+
           
       - name: Upload Client (Linux)
         uses: actions/upload-artifact@v4
