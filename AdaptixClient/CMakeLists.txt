@@ -305,3 +305,8 @@ else()
             wsock32 ws2_32 crypt32 iphlpapi netapi32 version winmm userenv dwmapi
     )
 endif()
+if(UNIX AND NOT APPLE)
+    install(TARGETS AdaptixClient DESTINATION bin)
+    install(FILES Resources/icons/os/linux/AdaptixClient.png DESTINATION share/icons/hicolor/256x256/apps OPTIONAL)
+    # We create the desktop file in CI, but good to have install rule if we had one.
+endif()
