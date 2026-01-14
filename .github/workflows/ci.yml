@@ -2,6 +2,7 @@ name: Build and Release
 
 on:
   push:
+    branches: [ "main" ]
     tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
@@ -11,9 +12,9 @@ permissions:
   contents: write
 
 jobs:
-  # --- Server Build Job (Cross-platform) ---
-  build-server:
-    name: Build Server
+  # --- Server Build Job (Linux & Windows) ---
+  build-server-linux-windows:
+    name: Build Server (Linux & Windows)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -21,31 +22,64 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.25'
           check-latest: true
           cache-dependency-path: AdaptixServer/go.sum
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc-mingw-w64 upx zip
           
       - name: Build Server (Linux)
         working-directory: AdaptixServer
-        run: GOOS=linux GOARCH=amd64 go build -o AdaptixServer-linux-amd64 -v .
+        run: |
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o AdaptixServer-linux-amd64 -v .
+          upx --best --lzma AdaptixServer-linux-amd64
+          zip AdaptixServer-linux-amd64.zip AdaptixServer-linux-amd64
         
       - name: Build Server (Windows)
         working-directory: AdaptixServer
-        run: GOOS=windows GOARCH=amd64 go build -o AdaptixServer-windows-amd64.exe -v .
+        run: |
+          CGO_ENABLED=1 GOOS=windows GOARCH=amd64 CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -o AdaptixServer-windows-amd64.exe -v .
+          upx --best --lzma AdaptixServer-windows-amd64.exe
+          zip AdaptixServer-windows-amd64.zip AdaptixServer-windows-amd64.exe
+
+      - name: Upload Server Artifacts (Linux/Windows)
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdaptixServer-Linux-Windows
+          path: AdaptixServer/*.zip
+
+  # --- Server Build Job (macOS) ---
+  build-server-macos:
+    name: Build Server (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          check-latest: true
+          cache-dependency-path: AdaptixServer/go.sum
 
       - name: Build Server (macOS Intel)
         working-directory: AdaptixServer
-        run: GOOS=darwin GOARCH=amd64 go build -o AdaptixServer-darwin-amd64 -v .
+        run: |
+          CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o AdaptixServer-darwin-amd64 -v .
+          zip AdaptixServer-darwin-amd64.zip AdaptixServer-darwin-amd64
 
       - name: Build Server (macOS Apple Silicon)
         working-directory: AdaptixServer
-        run: GOOS=darwin GOARCH=arm64 go build -o AdaptixServer-darwin-arm64 -v .
+        run: |
+          CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o AdaptixServer-darwin-arm64 -v .
+          zip AdaptixServer-darwin-arm64.zip AdaptixServer-darwin-arm64
 
-      - name: Upload Server Artifacts
+      - name: Upload Server Artifacts (macOS)
         uses: actions/upload-artifact@v4
         with:
-          name: AdaptixServer-All
-          path: AdaptixServer/AdaptixServer-*
+          name: AdaptixServer-macOS
+          path: AdaptixServer/*.zip
 
   # --- Linux Client Build Job ---
   build-client-linux:
@@ -204,38 +238,24 @@ jobs:
           copy build\AdaptixClient.exe dist\
           windeployqt --release --compiler-runtime --dir dist dist\AdaptixClient.exe
 
-      - name: Package SFX (Windows)
+      - name: Package Zip (Windows)
         shell: cmd
         run: |
-          :: Create 7z archive of the dist folder
-          7z a app.7z .\dist\*
-          
-          :: Download LZMA SDK to get 7zSD.sfx (The SFX module)
-          curl -L -o lzma_sdk.7z https://www.7-zip.org/a/lzma2301.7z
-          7z x lzma_sdk.7z -oextra
-          
-          :: Create Config for SFX
-          echo ;!@Install@!UTF-8! > config.txt
-          echo Title="AdaptixClient" >> config.txt
-          echo ExecuteFile="AdaptixClient.exe" >> config.txt
-          echo ExecuteParameters="" >> config.txt
-          echo RunningProcess="AdaptixClient.exe" >> config.txt
-          echo ;!@InstallEnd@! >> config.txt
-          
-          :: Combine to create Single Executable
-          copy /b extra\bin\7zSD.sfx + config.txt + app.7z AdaptixClient-Windows.exe
+          :: Just zip the dist folder
+          cd dist
+          7z a -tzip ..\AdaptixClient-Windows.zip *
         
       - name: Upload Client (Windows)
         uses: actions/upload-artifact@v4
         with:
           name: AdaptixClient-Windows
-          path: AdaptixClient-Windows.exe
+          path: AdaptixClient-Windows.zip
           
   # --- Release Job (Only on Tag) ---
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [build-server, build-client-linux, build-client-macos, build-client-windows]
+    needs: [build-server-linux-windows, build-server-macos, build-client-linux, build-client-macos, build-client-windows]
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Download All Artifacts
