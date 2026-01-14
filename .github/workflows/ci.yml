@@ -196,13 +196,18 @@ jobs:
         run: cmake --build build
       
       - name: Deploy Qt (Mac)
-        run: macdeployqt build/AdaptixClient.app -dmg -verbose=1
+        run: |
+          macdeployqt build/AdaptixClient.app -dmg -verbose=1
+          cd build
+          zip -r AdaptixClient-${{ matrix.arch }}.zip AdaptixClient.app
 
       - name: Upload Client (macOS)
         uses: actions/upload-artifact@v4
         with:
           name: AdaptixClient-macOS-${{ matrix.arch }}
-          path: build/AdaptixClient.dmg
+          path: |
+            build/AdaptixClient.dmg
+            build/AdaptixClient-*.zip
 
   # --- Windows Client Build Job ---
   build-client-windows:
@@ -270,8 +275,14 @@ jobs:
         run: |
           # Client Renaming
           mv artifacts/AdaptixClient-Linux/AdaptixClient-*.AppImage artifacts/AdaptixClient-Linux.AppImage
+          
+          # macOS
           mv artifacts/AdaptixClient-macOS-x64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-x64.dmg
+          mv artifacts/AdaptixClient-macOS-x64/AdaptixClient-*.zip artifacts/AdaptixClient-macOS-x64.zip
+          
           mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient.dmg artifacts/AdaptixClient-macOS-arm64.dmg
+          mv artifacts/AdaptixClient-macOS-arm64/AdaptixClient-*.zip artifacts/AdaptixClient-macOS-arm64.zip
+          
           mv artifacts/AdaptixClient-Windows/AdaptixClient-Windows.zip artifacts/AdaptixClient-Windows.zip
           
           # Server Moving (Flattening)
@@ -289,7 +300,9 @@ jobs:
             artifacts/server/*
             artifacts/AdaptixClient-Linux.AppImage
             artifacts/AdaptixClient-macOS-x64.dmg
+            artifacts/AdaptixClient-macOS-x64.zip
             artifacts/AdaptixClient-macOS-arm64.dmg
+            artifacts/AdaptixClient-macOS-arm64.zip
             artifacts/AdaptixClient-Windows.zip
           draft: false
           prerelease: false
